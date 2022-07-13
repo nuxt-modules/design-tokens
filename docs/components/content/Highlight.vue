@@ -1,5 +1,5 @@
 <template>
-  <span class="text-blue-500"><slot /></span>
+  <span><slot /></span>
 </template>
 
 <style scoped>
