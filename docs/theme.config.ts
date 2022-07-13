@@ -18,10 +18,6 @@ export default {
     src: '/cover.jpg',
     alt: 'Nuxt Design Tokens'
   },
-  header: {
-    title: '@nuxtjs/design-tokens 🎨',
-    logo: false
-  },
   footer: {
     credits: {
       icon: 'IconDocus',
