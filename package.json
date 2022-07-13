@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.4",
+    "browser-style-dictionary": "^3.1.1-browser.1",
     "@types/lodash.get": "^4.4.7",
     "chroma-js": "^2.4.2",
     "lodash.get": "^4.4.2",
@@ -67,8 +68,5 @@
     "nuxt": "npm:nuxt3@latest",
     "pathe": "^0.3.2",
     "vitest": "^0.18.0"
-  },
-  "peerDependencies": {
-    "browser-style-dictionary": "^3.1.1-browser.1"
   }
 }
