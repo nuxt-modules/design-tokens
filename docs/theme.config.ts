@@ -1,7 +1,7 @@
 export default {
-  title: '@nuxtjs/design-tokens',
-  description: 'Use Design Tokens in your Nuxt app.',
-  url: 'https://nuxt-design-tokens.netlify.app',
+  title: 'Nuxt Design Tokens',
+  description: 'Fully-typed design tokens integration for making and maintaining a design system.',
+  url: 'https://design-tokens.nuxtjs.org',
   socials: {
     twitter: '@yaeeelglx',
     github: 'nuxt-community/design-tokens-module'
@@ -13,6 +13,10 @@ export default {
   },
   aside: {
     level: 0
+  },
+  cover: {
+    src: '/cover.jpg',
+    alt: 'Nuxt Design Tokens'
   },
   header: {
     title: '@nuxtjs/design-tokens 🎨',
@@ -26,8 +30,8 @@ export default {
     },
     icons: [
       {
-        label: 'NuxtJS',
-        href: 'https://nuxtjs.org',
+        label: 'Nuxt',
+        href: 'https://v3.nuxtjs.org',
         component: 'IconNuxt'
       },
       {

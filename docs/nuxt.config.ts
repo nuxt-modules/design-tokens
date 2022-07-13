@@ -10,13 +10,6 @@ export default defineNuxtConfig({
   ignore: [
     'content/**/*'
   ],
-  components: [
-    {
-      path: '~/components',
-      prefix: '',
-      global: true
-    }
-  ],
   tailwindcss: {
     config: {
       theme: {
