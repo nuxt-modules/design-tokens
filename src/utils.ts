@@ -1,4 +1,4 @@
-import { mkdir, rmdir } from 'fs/promises'
+import { mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import { defu } from 'defu'
 import { resolve } from 'pathe'
@@ -71,10 +71,6 @@ export const resolveTokens = (layers: NuxtLayer[]) => {
   for (const layer of layers) { splitLayer(layer) }
 
   return { tokensFilePaths, tokens }
-}
-
-export const deleteTokensDir = async (path: string) => {
-  if (existsSync(path)) { await rmdir(path, { recursive: true }) }
 }
 
 export const createTokensDir = async (path: string) => {

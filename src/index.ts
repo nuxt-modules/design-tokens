@@ -43,8 +43,8 @@ export const $tokens = (path: DesignTokensPaths, key: keyof DesignToken = 'varia
   const { $dt } = jiti(import.meta.url)(module)
 
   const fail = () => {
-    // eslint-disable-next-line no-console
     const _key = key ? `.${key as string}` : ''
+    // eslint-disable-next-line no-console
     console.log(`Could not find the token ${path}${_key}!`)
   }
 

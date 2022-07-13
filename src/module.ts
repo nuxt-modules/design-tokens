@@ -10,7 +10,7 @@ import type { ViteDevServer } from 'vite'
 import { defu } from 'defu'
 import type { Nitro } from 'nitropack'
 import { generateTokens } from './runtime/server/utils'
-import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir, deleteTokensDir } from './utils'
+import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir } from './utils'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
 export default defineNuxtModule<ModuleOptions>({
