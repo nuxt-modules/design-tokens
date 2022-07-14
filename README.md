@@ -1,8 +1,14 @@
-[![@nuxt/image](./docs/public/cover.jpg "Nuxt Design Tokens")](https://design-tokens.nuxtjs.org)
+# @nuxtjs/design-tokens
 
-# Nuxt Design Tokens
+Use [Design Tokens](https://amzn.github.io/style-dictionary/#/tokens) in your Nuxt project.
 
-Use [Style Dictionary](https://amzn.github.io/style-dictionary) in your Nuxt project.
+## Features
+
+- 🚀 Powered by [Style Dictionary](https://amzn.github.io/style-dictionary)
+- ✨ Lets you configure the appeareance of your Nuxt app easily
+- 📦 Handles `tokens.config.ts` file
+- 👨‍🎨 Goes nicely with [@nuxt-themes/config](https://themes.nuxtjs.org)
+- 🎨 Offers `useTokens`, `$tokens` and `$dt` typed APIs
 
 ## Development
 
