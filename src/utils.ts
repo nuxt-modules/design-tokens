@@ -5,7 +5,6 @@ import { resolve } from 'pathe'
 import chalk from 'chalk'
 import { requireModule, useLogger } from '@nuxt/kit'
 import { name, version } from '../package.json'
-import { stubTokens } from './generate'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
 export interface NuxtLayer {
