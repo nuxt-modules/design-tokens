@@ -101,7 +101,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Inject typings
     nuxt.hook('prepare:types', (opts) => {
-      opts.references.push({ path: resolveTokensDir('types.d') })
+      opts.references.push({ path: resolveTokensDir('types.d.ts') })
     })
 
     // Initial build
