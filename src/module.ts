@@ -37,10 +37,11 @@ export default defineNuxtModule<ModuleOptions>({
     // `.nuxt/theme` resolver
     const tokensDir = withTrailingSlash(nuxt.options.buildDir + '/tokens')
 
-    // Refresh theme function
-    const refreshTokens = async (nitro?: Nitro) => {
-      await createTokensDir(tokensDir)
+    // Init directory
+    await createTokensDir(tokensDir)
 
+    // Refresh configuration
+    const refreshTokens = async (nitro?: Nitro) => {
       // Resolve theme configuration from every layer
       const { tokensFilePaths, tokens } = resolveTokens(layers as NuxtLayer[])
 
@@ -71,14 +72,15 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.build.transpile = nuxt.options.build.transpile || []
     nuxt.options.build.transpile.push(resolveRuntime('./runtime'))
 
-    // Set buildTokens to real function as the feature is enabled
+    // Main function to build tokens (module-level)
     const buildTokens = async (nitro) => {
       try {
         const start = performance.now()
         const tokens = await nitro.storage.getItem('cache:design-tokens:tokens.json') as NuxtDesignTokens
         await generateTokens(tokens, tokensDir)
         const end = performance.now()
-        logger.success(`Design Tokens built in ${start - end}ms`)
+        const ms = Math.round(end - start)
+        logger.success(`Design Tokens built${ms ? ' in ' + ms + 'ms' : ''}`)
       } catch (e) {
         logger.error('Could not build tokens!')
         logger.error(e.message)
