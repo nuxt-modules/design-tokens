@@ -5,6 +5,7 @@ import { resolve } from 'pathe'
 import chalk from 'chalk'
 import { requireModule, useLogger } from '@nuxt/kit'
 import { name, version } from '../package.json'
+import { stubTokens } from './generate'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
 export interface NuxtLayer {
@@ -75,7 +76,10 @@ export const resolveTokens = (layers: NuxtLayer[]) => {
 }
 
 export const createTokensDir = async (path: string) => {
-  if (!existsSync(path)) { await mkdir(path, { recursive: true }) }
+  if (!existsSync(path)) {
+    await mkdir(path, { recursive: true })
+    await stubTokens(path, true)
+  }
 }
 
 /**

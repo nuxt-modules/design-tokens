@@ -1,8 +1,9 @@
 import { existsSync } from 'fs'
-import { rm, writeFile } from 'fs/promises'
+import { unlink, writeFile } from 'fs/promises'
 import type { Core as Instance } from 'browser-style-dictionary/types/browser'
 import StyleDictionary from 'browser-style-dictionary/browser.js'
 import { tsTypesDeclaration, tsFull, jsFull } from './formats'
+import { createTokensDir } from './utils'
 import type { NuxtDesignTokens } from './index'
 
 export const stubTokens = async (buildPath: string, force = false) => {
@@ -18,7 +19,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
   for (const [file, stubbingFunction] of Object.entries(files)) {
     const path = `${buildPath}${file}`
 
-    if (force && existsSync(path)) { await rm(path) }
+    if (force && existsSync(path)) { await unlink(path) }
 
     if (!existsSync(path)) { await writeFile(path, stubbingFunction ? stubbingFunction({ tokens: {} }) : '') }
   }
@@ -29,6 +30,10 @@ export const generateTokens = async (
   buildPath: string,
   silent = true
 ) => {
+  // Check for tokens directory existence; it might get cleaned-up from `.nuxt`
+  if (!existsSync(buildPath)) { await createTokensDir(buildPath) }
+
+  // Stub tokens if no tokens provided
   if (!tokens || !Object.keys(tokens).length) {
     await stubTokens(buildPath, true)
     return

@@ -35,15 +35,26 @@ export default defineNuxtModule<ModuleOptions>({
 
     const privateConfig = nuxt.options.runtimeConfig.designTokens
 
-    // `.nuxt/theme` resolver
+    // `.nuxt/tokens` resolver
     const tokensDir = withTrailingSlash(nuxt.options.buildDir + '/tokens')
 
-    // Init directory
+    // Set srcDir for external imports
+    globalThis.__nuxtDesignTokensBuildDir__ = tokensDir
+
+    // Tokens dir resolver
+    const { resolve: resolveTokensDir } = createResolver(tokensDir)
+    privateConfig.tokensDir = tokensDir
+
+    // `runtime/` resolver
+    const { resolve: resolveRuntime } = createResolver(import.meta.url)
+    const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolveRuntime('./runtime') })
+
+    // Init directory on first module run
     await createTokensDir(tokensDir)
 
-    // Refresh configuration
+    // Refresh configurations
     const refreshTokens = async (nitro?: Nitro) => {
-      // Resolve theme configuration from every layer
+      // Resolve tokens.config configuration from every layer
       const { tokensFilePaths, tokens } = resolveTokens(layers as NuxtLayer[])
 
       if (moduleOptions.tokens) { privateConfig.tokensFilePaths = tokensFilePaths }
@@ -55,26 +66,8 @@ export default defineNuxtModule<ModuleOptions>({
       return { tokens, tokensFilePaths }
     }
 
-    // Set srcDir for external imports
-    globalThis.__nuxtDesignTokensBuildDir__ = tokensDir
-
-    // Theme dir resolver
-    const { resolve: resolveTokensDir } = createResolver(tokensDir)
-    privateConfig.tokensDir = tokensDir
-
-    // Initial theme resolving
-    const { tokens } = await refreshTokens()
-
-    // `runtime/` resolver
-    const { resolve: resolveRuntime } = createResolver(import.meta.url)
-    const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolveRuntime('./runtime') })
-
-    // Transpile
-    nuxt.options.build.transpile = nuxt.options.build.transpile || []
-    nuxt.options.build.transpile.push(resolveRuntime('./runtime'))
-
     // Main function to build tokens (module-level)
-    const buildTokens = async (nitro) => {
+    const buildTokens = async (nitro: Nitro) => {
       try {
         const start = performance.now()
         const tokens = await nitro.storage.getItem('cache:design-tokens:tokens.json') as NuxtDesignTokens
@@ -87,6 +80,13 @@ export default defineNuxtModule<ModuleOptions>({
         logger.error(e.message)
       }
     }
+
+    // Initial tokens resolving
+    const { tokens } = await refreshTokens()
+
+    // Transpile
+    nuxt.options.build.transpile = nuxt.options.build.transpile || []
+    nuxt.options.build.transpile.push(resolveRuntime('./runtime'))
 
     // Apply aliases
     nuxt.options.alias = nuxt.options.alias || {}
@@ -159,6 +159,7 @@ export default defineNuxtModule<ModuleOptions>({
     /**
      * Runtime
      */
+
     addPlugin({
       src: resolveRuntimeModule('./plugins/tokens')
     })
@@ -168,12 +169,10 @@ export default defineNuxtModule<ModuleOptions>({
       as: 'useTokens'
     })
 
-    // Create initial build targets for tokens
-    await generateTokens(tokens, tokensDir, true)
-
     /**
-     * Build environments
+     * Dev
      */
+
     if (nuxt.options.dev) {
       nuxt.hook('nitro:init', (nitro) => {
         nuxt.hook('vite:serverCreated', (viteServer: ViteDevServer) => {
@@ -196,9 +195,12 @@ export default defineNuxtModule<ModuleOptions>({
           })
         })
       })
-    } else {
-      // Production builds
-      nuxt.hook('build:before', async () => await generateTokens(tokens, tokensDir, true))
     }
+
+    /**
+     * Prod
+     */
+
+    nuxt.hook('build:before', async () => await generateTokens(tokens, tokensDir, true))
   }
 })
