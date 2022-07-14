@@ -41,8 +41,8 @@ export const resolveConfig = (layer: NuxtLayer, key: string, configFile = `${key
 
   if (filePath) {
     try {
-      const _tokensFile = requireModule(filePath, { clearCache: true })
-      if (_tokensFile) { config = _tokensFile }
+      const _file = requireModule(filePath, { clearCache: true })
+      if (_file) { config = _file }
     } catch (_) {}
   }
 

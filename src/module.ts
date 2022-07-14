@@ -74,9 +74,11 @@ export default defineNuxtModule<ModuleOptions>({
     // Set buildTokens to real function as the feature is enabled
     const buildTokens = async (nitro) => {
       try {
+        const start = performance.now()
         const tokens = await nitro.storage.getItem('cache:design-tokens:tokens.json') as NuxtDesignTokens
         await generateTokens(tokens, tokensDir)
-        logger.success('Tokens built succesfully!')
+        const end = performance.now()
+        logger.success(`Design Tokens built in ${start - end}ms`)
       } catch (e) {
         logger.error('Could not build tokens!')
         logger.error(e.message)

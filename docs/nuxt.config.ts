@@ -3,12 +3,8 @@ import { defineNuxtConfig } from 'nuxt'
 import colors from 'tailwindcss/colors.js'
 
 export default defineNuxtConfig({
-  modules: ['vue-plausible'],
   extends: [
     (process.env.DOCUS_THEME_PATH || '@nuxt-themes/docus')
-  ],
-  ignore: [
-    'content/**/*'
   ],
   components: [
     {
