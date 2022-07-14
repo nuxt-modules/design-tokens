@@ -1,5 +1,5 @@
 import { existsSync } from 'fs'
-import { unlink, writeFile } from 'fs/promises'
+import { rm, writeFile } from 'fs/promises'
 import type { Core as Instance } from 'browser-style-dictionary/types/browser'
 import StyleDictionary from 'browser-style-dictionary/browser.js'
 import { tsTypesDeclaration, tsFull, jsFull } from './formats'
@@ -19,7 +19,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
   for (const [file, stubbingFunction] of Object.entries(files)) {
     const path = `${buildPath}${file}`
 
-    if (force && existsSync(path)) { await unlink(path) }
+    if (force && existsSync(path)) { await rm(path) }
 
     if (!existsSync(path)) { await writeFile(path, stubbingFunction ? stubbingFunction({ tokens: {} }) : '') }
   }

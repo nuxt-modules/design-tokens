@@ -1,4 +1,4 @@
-import { $dt } from '../src/index'
+import { $dt } from '../src'
 
 export default {
   theme: {

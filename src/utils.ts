@@ -78,7 +78,6 @@ export const resolveTokens = (layers: NuxtLayer[]) => {
 export const createTokensDir = async (path: string) => {
   if (!existsSync(path)) {
     await mkdir(path, { recursive: true })
-    await stubTokens(path, true)
   }
 }
 
