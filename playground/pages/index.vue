@@ -39,9 +39,12 @@
 </template>
 
 <script setup lang="ts">
-const { fetch: fetchTokens, $t } = useTokens()
+const { fetch: fetchTokens } = useTokens()
 
 const { data } = await useAsyncData(fetchTokens)
+
+// eslint-disable-next-line no-console
+console.log(data.value)
 </script>
 
 <style scoped lang="postcss">
