@@ -29,7 +29,7 @@ export const generateTokens = async (
   buildPath: string,
   silent = true
 ) => {
-  if (!tokens || !Object.keys(tokens).length) {
+  if (!tokens || !Object.keys(tokens).length) {
     await stubTokens(buildPath, true)
     return
   }
