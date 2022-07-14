@@ -7,6 +7,11 @@ export default defineBuildConfig({
       input: './src/index.ts',
       builder: 'rollup',
       name: 'index'
+    },
+    {
+      input: './src/formats.ts',
+      builder: 'rollup',
+      name: 'formats'
     }
   ],
   externals: [
