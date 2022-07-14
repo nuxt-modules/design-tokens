@@ -12,9 +12,18 @@ export default defineBuildConfig({
       input: './src/formats.ts',
       builder: 'rollup',
       name: 'formats'
+    },
+    {
+      input: './src/generate.ts',
+      builder: 'rollup',
+      name: 'generate'
     }
   ],
   externals: [
+    // ??
+    'formats.mjs',
+    'generate.mjs',
+    // ??
     '#design-tokens',
     'browser-style-dictionary',
     'ufo',

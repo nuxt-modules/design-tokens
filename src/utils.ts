@@ -15,7 +15,8 @@ export interface NuxtLayer {
 
 // Default options
 export const MODULE_DEFAULTS: ModuleOptions = {
-  tokens: true
+  tokens: true,
+  server: false
 }
 
 // Logging

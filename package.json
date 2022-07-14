@@ -18,6 +18,14 @@
     "./module": {
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
+    },
+    "./formats": {
+      "import": "./dist/formats.mjs",
+      "require": "./dist/formats.cjs"
+    },
+    "./generate": {
+      "import": "./dist/generate.mjs",
+      "require": "./dist/generate.cjs"
     }
   },
   "main": "./dist/index.mjs",
@@ -29,6 +37,8 @@
   "scripts": {
     "build": "nuxt-module-build",
     "dev": "nuxi dev playground",
+    "build:dev": "nuxi build playground",
+    "generate:dev": "nuxi generate playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxi prepare playground && nuxt-module-build --stub",
     "dev:fixtures": "./.github/scripts/fixture.sh",

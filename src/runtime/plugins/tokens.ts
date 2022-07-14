@@ -1,10 +1,10 @@
 import type { Ref } from 'vue'
 import { kebabCase } from 'scule'
-import type { DesignTokensPaths } from '#tokens/types'
+import type { DesignTokensPaths } from '#design-tokens/types'
 import { defineNuxtPlugin, unref } from '#imports'
 
 export default defineNuxtPlugin(() => {
-  const resolveToken = (path: DesignTokensPaths | Ref<TokensPaths>): string => `var(--${unref(path).split('.').map(key => kebabCase(key)).join('-')})`
+  const resolveToken = (path: DesignTokensPaths | Ref<DesignTokensPaths>): string => `var(--${unref(path).split('.').map(key => kebabCase(key)).join('-')})`
 
   return {
     provide: {

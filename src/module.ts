@@ -9,7 +9,7 @@ import { withTrailingSlash } from 'ufo'
 import type { ViteDevServer } from 'vite'
 import { defu } from 'defu'
 import type { Nitro } from 'nitropack'
-import { generateTokens } from './runtime/server/utils'
+import { generateTokens } from './generate'
 import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir } from './utils'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
@@ -17,16 +17,17 @@ export default defineNuxtModule<ModuleOptions>({
   meta: {
     name,
     version,
-    configKey: 'theme',
+    configKey: 'designTokens',
     compatibility: {
-      nuxt: '^3.0.0-rc.4'
+      nuxt: '^3.0.0-rc.5'
     }
   },
   defaults: MODULE_DEFAULTS,
   async setup (moduleOptions, nuxt) {
     // Private runtime config
     nuxt.options.runtimeConfig.designTokens = {
-      tokensFilePaths: []
+      tokensFilePaths: [],
+      server: moduleOptions.server
     }
 
     // Nuxt `extends` key layers
@@ -87,9 +88,6 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
 
-    // Transpile browser-style-dictionary
-    nuxt.options.build.transpile.push('browser-style-dictionary/browser.js')
-
     // Apply aliases
     nuxt.options.alias = nuxt.options.alias || {}
     nuxt.options.alias['#design-tokens'] = resolveTokensDir('index')
@@ -118,12 +116,6 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.handlers = nitroConfig.handlers || []
 
       nitroConfig.handlers.push({
-        method: 'get',
-        route: '/api/_design-tokens/tokens/generate',
-        handler: resolveRuntimeModule('./server/api/tokens/generate')
-      })
-
-      nitroConfig.handlers.push({
         method: 'all',
         route: '/api/_design-tokens/tokens',
         handler: resolveRuntimeModule('./server/api/tokens/index')
@@ -133,27 +125,35 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.prerender = nitroConfig.prerender || {}
       nitroConfig.prerender.routes = nitroConfig.prerender.routes || []
       nitroConfig.prerender.routes.push('/api/_design-tokens/tokens')
-      nitroConfig.prerender.routes.push('/api/_design-tokens/options')
 
       // Bundled storage
       nitroConfig.bundledStorage = nitroConfig.bundledStorage || []
       nitroConfig.bundledStorage.push('/cache/tokens')
       nitroConfig.bundledStorage.push('/tokens')
 
-      // Inlined dependencies
-      nitroConfig.externals = defu(typeof nitroConfig.externals === 'object' ? nitroConfig.externals : {}, {
-        inline: [
-          'lodash',
-          'browser-style-dictionary',
-          'browser-style-dictionary/lib',
-          'browser-style-dictionary/browser',
-          // Inline module runtime in Nitro bundle
-          resolveRuntime()
-        ]
-      })
+      // Opt-in server features (generate from `/api/_design-tokens/tokens/generate`)
+      if (privateConfig.server) {
+        nitroConfig.handlers.push({
+          method: 'get',
+          route: '/api/_design-tokens/tokens/generate',
+          handler: resolveRuntimeModule('./server/api/tokens/generate')
+        })
 
-      // Aliases
-      nitroConfig.alias['#design-tokens'] = resolveRuntime('./runtime/server/utils')
+        // Inlined dependencies
+        nitroConfig.externals = defu(typeof nitroConfig.externals === 'object' ? nitroConfig.externals : {}, {
+          inline: [
+            'lodash',
+            'browser-style-dictionary',
+            'browser-style-dictionary/lib',
+            'browser-style-dictionary/browser',
+            // Inline module runtime in Nitro bundle
+            resolveRuntime()
+          ]
+        })
+
+        // Aliases
+        nitroConfig.alias['#design-tokens'] = resolveRuntime('./runtime/server/utils')
+      }
     })
 
     /**
@@ -164,13 +164,8 @@ export default defineNuxtModule<ModuleOptions>({
     })
     addAutoImport({
       from: resolveRuntimeModule('./composables/tokens'),
-      name: '$tokens',
-      as: '$tokens'
-    })
-    addAutoImport({
-      from: resolveRuntimeModule('./composables/tokens'),
-      name: '$tokens',
-      as: '$t'
+      name: 'useTokens',
+      as: 'useTokens'
     })
 
     // Create initial build targets for tokens

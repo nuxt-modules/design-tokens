@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 
   extends: [resolveThemeDir('./theme')],
 
-  theme: {
-    tokens: true
+  designTokens: {
+    server: false
   }
 })

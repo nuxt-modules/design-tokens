@@ -10,6 +10,7 @@ export interface NuxtDesignTokens extends ThemeTokens, DesignTokens {
 }
 
 export interface NuxtDesignTokensConfig {
+  server?: boolean
   tokens?: NuxtDesignTokens | boolean | string
 }
 
@@ -28,6 +29,7 @@ export interface ModulePublicRuntimeConfig {
 // Non-reactive data taken from initial boot
 export interface ModulePrivateRuntimeConfig {
   tokensDir?: string
+  server?: boolean
   tokensFilePaths?: Array<string>
 }
 

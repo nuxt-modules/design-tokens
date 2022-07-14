@@ -1,8 +1,12 @@
-import type { DesignTokensPaths } from '#tokens/types'
+import type { NuxtDesignTokens } from '../../index'
 import { useNuxtApp } from '#imports'
 
-export const $tokens = (path: DesignTokensPaths): string => {
-  const { $tokens: $t } = useNuxtApp()
+export const useTokens = () => {
+  const { $tokens } = useNuxtApp()
 
-  return $t(path)
+  return {
+    $tokens,
+    $dt: $tokens,
+    fetch: async (): Promise<NuxtDesignTokens> => await $fetch('/api/_design-tokens/tokens')
+  }
 }

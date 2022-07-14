@@ -38,6 +38,12 @@
   </div>
 </template>
 
+<script setup lang="ts">
+const { fetch: fetchTokens, $t } = useTokens()
+
+const { data } = await useAsyncData(fetchTokens)
+</script>
+
 <style scoped lang="postcss">
 .app {
   height: 100vh;
