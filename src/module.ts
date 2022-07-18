@@ -202,5 +202,6 @@ export default defineNuxtModule<ModuleOptions>({
      */
 
     nuxt.hook('build:before', async () => await generateTokens(tokens, tokensDir, true))
+    await generateTokens(tokens, tokensDir, true)
   }
 })
