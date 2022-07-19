@@ -24,7 +24,7 @@ const DesignTokensType =
 }`
 
 const getFunction =
-`const get = (obj, path, defValue) => {
+`const get = (obj, path, defValue = undefined) => {
   if (!path) return undefined
   const pathArray = Array.isArray(path) ? path : path.match(/([^[.\\]])+/g)
   const result = pathArray.reduce(
