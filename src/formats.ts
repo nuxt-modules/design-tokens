@@ -24,10 +24,15 @@ const DesignTokensType =
 }`
 
 const getFunction =
-`const get = (obj, path, def) => (() => typeof path === 'string' ? path.replace(/\\[(\\d+)]/g,'.$1') : path.join('.'))()
-  .split('.')
-  .filter(Boolean)
-  .every(step => ((obj = obj[step]) !== undefined)) ? obj : def`
+`const get = (obj, path, defValue) => {
+  if (!path) return undefined
+  const pathArray = Array.isArray(path) ? path : path.match(/([^[.\\]])+/g)
+  const result = pathArray.reduce(
+    (prevObj, key) => prevObj && prevObj[key],
+    obj
+  )
+  return result === undefined ? defValue : result
+}`
 
 export const treeWalker = (obj, typing: boolean = true) => {
   let type = Object.create(null)
