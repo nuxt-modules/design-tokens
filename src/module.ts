@@ -203,5 +203,12 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.hook('build:before', async () => await generateTokens(tokens, tokensDir, true))
     await generateTokens(tokens, tokensDir, true)
+
+    // @nuxtjs/tailwindcss support
+    // @ts-ignore - Module might not exist
+    nuxt.hook('tailwindcss:config', (tailwindConfig) => {
+      tailwindConfig.content = tailwindConfig.content ?? []
+      tailwindConfig.content.push(`${tokensDir}/**/*`)
+    })
   }
 })
