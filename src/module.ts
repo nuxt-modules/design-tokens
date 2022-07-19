@@ -177,7 +177,7 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.hook('nitro:init', (nitro) => {
         nuxt.hook('vite:serverCreated', (viteServer: ViteDevServer) => {
           nuxt.hook('builder:watch', async (_, path) => {
-            const isTokenFile = moduleOptions.tokens ? privateConfig.tokensFilePaths.some(tokensFilePath => tokensFilePath.includes(path.replace('.js', '')) || tokensFilePath.includes(path.replace('.ts', ''))) : false
+            const isTokenFile = path.includes('tokens.config.ts') || path.includes('tokens.config.js')
 
             if (isTokenFile) {
               const { tokens } = await refreshTokens(nitro)
