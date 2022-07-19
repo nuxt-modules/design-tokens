@@ -23,6 +23,12 @@ const DesignTokensType =
   [key: string]: DesignTokens | DesignToken;
 }`
 
+const getFunction =
+`const get = (obj, path, def) => (() => typeof path === 'string' ? path.replace(/\\[(\\d+)]/g,'.$1') : path.join('.'))()
+  .split('.')
+  .filter(Boolean)
+  .every(step => ((obj = obj[step]) !== undefined)) ? obj : def`
+
 export const treeWalker = (obj, typing: boolean = true) => {
   let type = Object.create(null)
 
@@ -104,11 +110,11 @@ export const tsTypesDeclaration = ({ tokens }) => {
 }
 
 export const tsFull = ({ tokens }) => {
-  let result = 'import get from \'lodash.get\'\n\n'
-
-  result = result + 'import type { NuxtDesignTokens, DesignTokensPaths, DesignToken } from \'./types.d\'\n\n'
+  let result = 'import type { NuxtDesignTokens, DesignTokensPaths, DesignToken } from \'./types.d\'\n\n'
 
   result = result + 'export * from \'./types.d\'\n\n'
+
+  result = result + `${getFunction}\n\n`
 
   result = result + `export const designTokens: NuxtDesignTokens = ${JSON.stringify(treeWalker(tokens, false), null, 2)}\n`
 
@@ -149,7 +155,7 @@ export const $tokens = (path: DesignTokensPaths, key: keyof DesignToken = 'varia
 }
 
 export const jsFull = ({ tokens }) => {
-  let result = 'import get from \'lodash.get\'\n\n'
+  let result = `${getFunction}\n\n`
 
   result = result + `export const designTokens = ${JSON.stringify(treeWalker(tokens, false), null, 2)}\n`
 

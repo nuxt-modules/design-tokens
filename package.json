@@ -54,9 +54,7 @@
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.6",
     "browser-style-dictionary": "^3.1.1-browser.1",
-    "@types/lodash.get": "^4.4.7",
     "chroma-js": "^2.4.2",
-    "lodash.get": "^4.4.2",
     "untyped": "^0.4.4"
   },
   "devDependencies": {

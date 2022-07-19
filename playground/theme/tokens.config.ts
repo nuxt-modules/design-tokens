@@ -1,6 +1,6 @@
 import { defineTokens, palette } from '../../src'
 
-const primary = palette('gray')
+const primary = palette('blue')
 
 export default defineTokens({
   colors: {
