@@ -9,7 +9,7 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       tokens: resolveToken,
-      t: resolveToken
+      dt: resolveToken
     }
   }
 })
