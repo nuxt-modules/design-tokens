@@ -210,7 +210,6 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('tailwindcss:config', (tailwindConfig) => {
       tailwindConfig.content = tailwindConfig.content ?? []
       tailwindConfig.content.push(join(tokensDir, 'index.ts'))
-      console.log(tailwindConfig)
     })
   }
 })
