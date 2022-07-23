@@ -208,7 +208,7 @@ export default defineNuxtModule<ModuleOptions>({
     // @ts-ignore - Module might not exist
     nuxt.hook('tailwindcss:config', (tailwindConfig) => {
       tailwindConfig.content = tailwindConfig.content ?? []
-      tailwindConfig.content.push(`${tokensDir}/**/*`)
+      tailwindConfig.content.push(`${tokensDir}/index.ts`)
     })
   }
 })
