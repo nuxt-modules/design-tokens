@@ -9,6 +9,7 @@ import { withTrailingSlash } from 'ufo'
 import type { ViteDevServer } from 'vite'
 import { defu } from 'defu'
 import type { Nitro } from 'nitropack'
+import { join } from 'pathe'
 import { generateTokens } from './generate'
 import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir } from './utils'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
@@ -208,7 +209,8 @@ export default defineNuxtModule<ModuleOptions>({
     // @ts-ignore - Module might not exist
     nuxt.hook('tailwindcss:config', (tailwindConfig) => {
       tailwindConfig.content = tailwindConfig.content ?? []
-      tailwindConfig.content.push(`${tokensDir}/index.ts`)
+      tailwindConfig.content.push(join(tokensDir, 'index.ts'))
+      console.log(tailwindConfig)
     })
   }
 })
