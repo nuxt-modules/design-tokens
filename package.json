@@ -11,22 +11,13 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.mjs"
-    },
+    ".": "./dist/index.mjs",
     "./module": {
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
     },
-    "./formats": {
-      "import": "./dist/formats.mjs",
-      "require": "./dist/formats.cjs"
-    },
-    "./generate": {
-      "import": "./dist/generate.mjs",
-      "require": "./dist/generate.cjs"
-    }
+    "./formats": "./dist/formats.mjs",
+    "./generate": "./dist/generate.mjs"
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
