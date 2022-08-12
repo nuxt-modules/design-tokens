@@ -39,8 +39,7 @@
 </template>
 
 <script setup lang="ts">
-const { fetch: fetchTokens } = useTokens()
-
+// const { fetch: fetchTokens } = useTokens()
 // const { data } = await useAsyncData(fetchTokens)
 </script>
 
