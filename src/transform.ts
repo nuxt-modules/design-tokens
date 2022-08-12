@@ -12,7 +12,7 @@ export default createUnplugin(() => ({
     return regex.test(id)
   },
   transform (code) {
-    const regex = /\$dt\('(.*)'\)/
+    const regex = /\$dt\('(.*)'\)/g
 
     if (regex.test(code)) {
       // Find any usage of `$dt('...')` in code and replace it by `var(--...)`
