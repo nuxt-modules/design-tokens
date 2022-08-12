@@ -1,4 +1,3 @@
-import { regexLiteral } from '@babel/types'
 import { kebabCase } from 'scule'
 import { createUnplugin } from 'unplugin'
 

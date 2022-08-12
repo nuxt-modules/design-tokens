@@ -24,6 +24,8 @@ export default defineBuildConfig({
     'formats.mjs',
     'generate.mjs',
     // ??
+    'scule',
+    'unplugin',
     '#design-tokens',
     'browser-style-dictionary',
     'ufo',
