@@ -1392,6 +1392,11 @@ acorn@^8.5.0, acorn@^8.6.0, acorn@^8.7.0, acorn@^8.7.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.1.tgz#0197122c843d1bf6d0a5e83220a788f278f63c30"
   integrity sha512-Xx54uLJQZ19lKygFXOWsscKUbsBZW0CPykPhVQdhIeIwrbPmJzqeASDInc8nKBnp/JT6igTs82qPXz069H8I/A==
 
+acorn@^8.8.0:
+  version "8.8.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.0.tgz#88c0187620435c7f6015803f5539dae05a9dbea8"
+  integrity sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==
+
 agent-base@6:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
@@ -4712,6 +4717,17 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+magic-regexp@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/magic-regexp/-/magic-regexp-0.4.1.tgz#9805c77984fc2302c333e1cdeb221a9523331594"
+  integrity sha512-JNwUo8+mV7yYUz3z6YDac4qhKMKVYOiEMU1DkW+EwG+BADaXCZpdh0wNFk1+7B2wrMGF4V6jrARWBitFZW2gGw==
+  dependencies:
+    estree-walker "^3.0.1"
+    magic-string "^0.26.2"
+    mlly "^0.5.7"
+    ufo "^0.8.5"
+    unplugin "^0.8.1"
+
 magic-string@^0.25.7:
   version "0.25.9"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.9.tgz#de7f9faf91ef8a1c91d02c2e5314c8277dbcdd1c"
@@ -5340,6 +5356,16 @@ mlly@^0.5.2, mlly@^0.5.3, mlly@^0.5.4:
   dependencies:
     pathe "^0.3.1"
     pkg-types "^0.3.3"
+
+mlly@^0.5.7:
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/mlly/-/mlly-0.5.10.tgz#4d5bdce6f9531392846cfde6257e1a45bc196458"
+  integrity sha512-mY6i+bwcgn0XAdZTiiBt6kyoUjLsm3Cuv0T4CchQJcq/UCSUcGPapSxc4g7whtIsUfcsJ2kGqZAdmqCF/VNC/Q==
+  dependencies:
+    acorn "^8.8.0"
+    pathe "^0.3.4"
+    pkg-types "^0.3.3"
+    ufo "^0.8.5"
 
 mri@^1.1.0, mri@^1.2.0:
   version "1.2.0"
@@ -5970,6 +5996,11 @@ pathe@^0.3.0, pathe@^0.3.1, pathe@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/pathe/-/pathe-0.3.2.tgz#016345ed643027404d7a9ed8d1454ad997a1483a"
   integrity sha512-qhnmX0TOqlCvdWWTkoM83wh5J8fZ2yhbDEc9MlsnAEtEc+JCwxUKEwmd6pkY9hRe6JR1Uecbc14VcAKX2yFSTA==
+
+pathe@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/pathe/-/pathe-0.3.4.tgz#35bfb1e92373f98d9711cc74e7d6475a0654deae"
+  integrity sha512-YWgqEdxf36R6vcsyj0A+yT/rDRPe0wui4J9gRR7T4whjU5Lx/jZOr75ckEgTNaLVQABAwsrlzHRpIKcCdXAQ5A==
 
 pathval@^1.1.1:
   version "1.1.1"
@@ -7804,6 +7835,16 @@ unplugin@^0.7.2:
   integrity sha512-m7thX4jP8l5sETpLdUASoDOGOcHaOVtgNyrYlToyQUvILUtEzEnngRBrHnAX3IKqooJVmXpoa/CwQ/QqzvGaHQ==
   dependencies:
     acorn "^8.7.1"
+    chokidar "^3.5.3"
+    webpack-sources "^3.2.3"
+    webpack-virtual-modules "^0.4.4"
+
+unplugin@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/unplugin/-/unplugin-0.8.1.tgz#4517b6a8ec3d944e838f9c346921d9777cd159e1"
+  integrity sha512-o7rUZoPLG1fH4LKinWgb77gDtTE6mw/iry0Pq0Z5UPvZ9+HZ1/4+7fic7t58s8/CGkPrDpGq+RltO+DmswcR4g==
+  dependencies:
+    acorn "^8.8.0"
     chokidar "^3.5.3"
     webpack-sources "^3.2.3"
     webpack-virtual-modules "^0.4.4"

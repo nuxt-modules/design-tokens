@@ -42,14 +42,12 @@
 const { fetch: fetchTokens } = useTokens()
 
 const { data } = await useAsyncData(fetchTokens)
-
-// eslint-disable-next-line no-console
-console.log(data.value)
 </script>
 
 <style scoped lang="postcss">
 .app {
   height: 100vh;
   width: 100vw;
+  background-color: $dt('colors.primary.100');
 }
 </style>

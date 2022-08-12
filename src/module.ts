@@ -13,6 +13,7 @@ import type { Nitro } from 'nitropack'
 import { join } from 'pathe'
 import { generateTokens } from './generate'
 import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir } from './utils'
+import transformPlugin from './transform'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
 export default defineNuxtModule<ModuleOptions>({
@@ -211,6 +212,22 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('tailwindcss:config', (tailwindConfig) => {
       tailwindConfig.content = tailwindConfig.content ?? []
       tailwindConfig.content.push(join(tokensDir, 'index.ts'))
+    })
+
+    /**
+     * Transform plugin for `$dt()` usage in <style> tags
+     */
+
+    // Webpack plugin
+    nuxt.hook('webpack:config', (config: any) => {
+      config.plugins = config.plugins || []
+      config.plugins.unshift(transformPlugin.webpack())
+    })
+
+    // Vite plugin
+    nuxt.hook('vite:extend', (vite: any) => {
+      vite.config.plugins = vite.config.plugins || []
+      vite.config.plugins.push(transformPlugin.vite())
     })
   }
 })
