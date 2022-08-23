@@ -33,6 +33,7 @@ export const palette = (
 
   return {
     ...scalePalette(color),
+    // @ts-ignore
     palette: true
   }
 }
