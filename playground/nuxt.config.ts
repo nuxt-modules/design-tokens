@@ -10,9 +10,11 @@ export default defineNuxtConfig({
     '@nuxtjs/design-tokens': resolveThemeDir('../src/module.ts')
   },
 
-  extends: [resolveThemeDir('./theme')],
+  extends: [resolveThemeDir('./theme')]
 
+  /*
   designTokens: {
     server: false
   }
+  */
 })

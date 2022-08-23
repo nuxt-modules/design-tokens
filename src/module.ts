@@ -1,10 +1,12 @@
 import { performance } from 'perf_hooks'
+import { readFile } from 'fs/promises'
 import {
   defineNuxtModule,
   createResolver,
   resolveModule,
   addPlugin,
-  addAutoImport
+  addAutoImport,
+  addPluginTemplate
 } from '@nuxt/kit'
 import { withTrailingSlash } from 'ufo'
 import type { ViteDevServer } from 'vite'
@@ -13,7 +15,7 @@ import type { Nitro } from 'nitropack'
 import { join } from 'pathe'
 import { generateTokens } from './generate'
 import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir } from './utils'
-import transformPlugin from './transform'
+import { registerTransformPlugin } from './transform'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
 export default defineNuxtModule<ModuleOptions>({
@@ -32,6 +34,9 @@ export default defineNuxtModule<ModuleOptions>({
       tokensFilePaths: [],
       server: moduleOptions.server
     }
+
+    // Local last tokens count var
+    let lastTokensCount = 0
 
     // Nuxt `extends` key layers
     const layers = nuxt.options._layers
@@ -55,6 +60,16 @@ export default defineNuxtModule<ModuleOptions>({
     // Init directory on first module run
     await createTokensDir(tokensDir)
 
+    // Register PostCSS plugins
+    const postcssOptions =
+      nuxt.options.postcss ||
+      nuxt.options.build.postcss.postcssOptions ||
+      nuxt.options.build.postcss as any
+    postcssOptions.plugins = postcssOptions.plugins || {}
+    postcssOptions.plugins['postcss-nested'] = postcssOptions.plugins['postcss-nested'] ?? {}
+    postcssOptions.plugins['postcss-custom-properties'] = postcssOptions.plugins['postcss-custom-properties'] ?? {}
+    // postcssOptions.plugins['postcss-easing-gradients'] = postcssOptions.plugins['postcss-easing-gradients'] ?? {}
+
     // Refresh configurations
     const refreshTokens = async (nitro?: Nitro) => {
       // Resolve tokens.config configuration from every layer
@@ -63,6 +78,12 @@ export default defineNuxtModule<ModuleOptions>({
       if (moduleOptions.tokens) { privateConfig.tokensFilePaths = tokensFilePaths }
 
       if (nitro) {
+        // Grab user-project config for live-edit purposes
+        const projectConfigPath = resolveModule(tokensFilePaths[0])
+        const projectConfig = (await readFile(projectConfigPath)).toString()
+        await nitro.storage.setItem('cache:design-tokens:config', projectConfig)
+
+        // Set tokens
         await nitro.storage.setItem('cache:design-tokens:tokens.json', tokens)
       }
 
@@ -70,14 +91,25 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // Main function to build tokens (module-level)
-    const buildTokens = async (nitro: Nitro) => {
+    const buildTokens = async (nitro: Nitro, viteServer?: ViteDevServer) => {
       try {
         const start = performance.now()
         const tokens = await nitro.storage.getItem('cache:design-tokens:tokens.json') as NuxtDesignTokens
-        await generateTokens(tokens, tokensDir)
+        const dictionary = await generateTokens(tokens, tokensDir)
         const end = performance.now()
         const ms = Math.round(end - start)
         logger.success(`Design Tokens built${ms ? ' in ' + ms + 'ms' : ''}`)
+
+        // Force full-reload on token addition/deletion
+        // This is a bit of a hack and should be removed
+        if (viteServer && lastTokensCount !== dictionary.allTokens.length) {
+          lastTokensCount = dictionary.allTokens.length
+          viteServer.moduleGraph.invalidateAll()
+          viteServer.ws.send({
+            type: 'full-reload',
+            path: '*'
+          })
+        }
       } catch (e) {
         logger.error('Could not build tokens!')
         logger.error(e.message)
@@ -85,7 +117,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // Initial tokens resolving
-    const { tokens } = await refreshTokens()
+    const { tokens, tokensFilePaths } = await refreshTokens()
 
     // Transpile
     nuxt.options.build.transpile = nuxt.options.build.transpile || []
@@ -94,11 +126,26 @@ export default defineNuxtModule<ModuleOptions>({
     // Apply aliases
     nuxt.options.alias = nuxt.options.alias || {}
     nuxt.options.alias['#design-tokens'] = resolveTokensDir('index')
+    nuxt.options.alias['#design-tokens/style'] = resolveTokensDir('tokens.css')
     nuxt.options.alias['#design-tokens/types'] = resolveTokensDir('types.d')
 
     // Inject CSS
-    nuxt.options.css = nuxt.options.css || []
-    nuxt.options.css = [...nuxt.options.css, resolveTokensDir('tokens.css')]
+    // nuxt.options.css = nuxt.options.css || []
+    // nuxt.options.css = [...nuxt.options.css, resolveRuntime('./runtime/assets/reset.css'), resolveTokensDir('tokens.css')]
+    addPluginTemplate({
+      filename: 'tokens.mjs',
+      getContents: () => {
+        const lines = [
+          `import '${resolveTokensDir('tokens.css')}'`,
+          `import '${resolveRuntime('./runtime/assets/reset.css')}'`,
+          'export default defineNuxtPlugin(() => {})'
+        ]
+        return lines.join('\n')
+      }
+    })
+
+    // Register `$dt()` transform plugin
+    registerTransformPlugin(nuxt, { tokensDir, tokensFilePaths: tokensFilePaths.map(path => resolveModule(path)) })
 
     // Inject typings
     nuxt.hook('prepare:types', (opts) => {
@@ -123,11 +170,17 @@ export default defineNuxtModule<ModuleOptions>({
         route: '/api/_design-tokens/tokens',
         handler: resolveRuntimeModule('./server/api/tokens/index')
       })
+      nitroConfig.handlers.push({
+        method: 'all',
+        route: '/api/_design-tokens/config',
+        handler: resolveRuntimeModule('./server/api/tokens/config')
+      })
 
       // Pre-render
       nitroConfig.prerender = nitroConfig.prerender || {}
       nitroConfig.prerender.routes = nitroConfig.prerender.routes || []
       nitroConfig.prerender.routes.push('/api/_design-tokens/tokens')
+      nitroConfig.prerender.routes.push('/api/_design-tokens/config')
 
       // Bundled storage
       nitroConfig.bundledStorage = nitroConfig.bundledStorage || []
@@ -179,10 +232,13 @@ export default defineNuxtModule<ModuleOptions>({
     if (nuxt.options.dev) {
       nuxt.hook('nitro:init', (nitro) => {
         nuxt.hook('vite:serverCreated', (viteServer: ViteDevServer) => {
-          nuxt.hook('builder:watch', async (_, path) => {
-            const isTokenFile = path.includes('tokens.config.ts') || path.includes('tokens.config.js')
+          tokensFilePaths.forEach(path => viteServer.config.assetsInclude(resolveModule(path)))
 
-            if (isTokenFile) {
+          nuxt.hook('builder:watch', async (_, path) => {
+            const extensions = ['.js', '.ts', '.mjs']
+            const isTokensConfig = extensions.some(extension => path.includes('tokens.config' + extension))
+
+            if (isTokensConfig) {
               const { tokens } = await refreshTokens(nitro)
 
               viteServer.ws.send({
@@ -193,7 +249,7 @@ export default defineNuxtModule<ModuleOptions>({
                 }
               })
 
-              await buildTokens(nitro)
+              await buildTokens(nitro, viteServer)
             }
           })
         })
@@ -204,7 +260,7 @@ export default defineNuxtModule<ModuleOptions>({
      * Prod
      */
 
-    nuxt.hook('build:before', async () => await generateTokens(tokens, tokensDir, true))
+    nuxt.hook('build:before', async () => (await generateTokens(tokens, tokensDir, true)) as any)
     await generateTokens(tokens, tokensDir, true)
 
     // @nuxtjs/tailwindcss support
@@ -212,22 +268,6 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('tailwindcss:config', (tailwindConfig) => {
       tailwindConfig.content = tailwindConfig.content ?? []
       tailwindConfig.content.push(join(tokensDir, 'index.ts'))
-    })
-
-    /**
-     * Transform plugin for `$dt()` usage in <style> tags
-     */
-
-    // Webpack plugin
-    nuxt.hook('webpack:config', (config: any) => {
-      config.plugins = config.plugins || []
-      config.plugins.unshift(transformPlugin.webpack())
-    })
-
-    // Vite plugin
-    nuxt.hook('vite:extend', (vite: any) => {
-      vite.config.plugins = vite.config.plugins || []
-      vite.config.plugins.push(transformPlugin.vite())
     })
   }
 })

@@ -1,12 +1,21 @@
 const DesignTokenType =
-`interface DesignToken {
+`interface DesignToken<T = string | number> {
   /* The raw value you specified in your token declaration. */
-  value: any;
+  value?: T;
   /* CSS Variable reference that gets generated. */
-  variable: string;
+  variable?: string;
   name?: string;
   comment?: string;
   themeable?: boolean;
+  property?: string;
+  /* Is the property using compose() */
+  composed?: boolean;
+  /* Is the property using palette() */
+  palette?: boolean
+  /* Is the property nested in a selector */
+  nested?: string;
+  /* Is the property nested in variant */
+  variant?: string;
   attributes?: {
     category?: string;
     type?: string;
@@ -23,16 +32,17 @@ const DesignTokensType =
   [key: string]: DesignTokens | DesignToken;
 }`
 
-const getFunction =
-`const get = (obj, path, defValue = undefined) => {
-  if (!path) return undefined
-  const pathArray = Array.isArray(path) ? path : path.match(/([^[.\\]])+/g)
+export const get = (obj, path, defValue = undefined) => {
+  if (!path) { return undefined }
+  const pathArray = Array.isArray(path) ? path : path.match(/([^[.\]])+/g)
   const result = pathArray.reduce(
     (prevObj, key) => prevObj && prevObj[key],
     obj
   )
   return result === undefined ? defValue : result
-}`
+}
+
+const getFunction = `const get = ${get.toString()}`
 
 export const treeWalker = (obj, typing: boolean = true) => {
   let type = Object.create(null)
@@ -127,7 +137,9 @@ export const tsFull = ({ tokens }) => {
 /**
  * Get a theme token by its path
  */
-export const $tokens = (path: DesignTokensPaths, key: keyof DesignToken = 'variable', flatten: boolean = true) => {
+export const $tokens = (path: DesignTokensPaths = undefined, key: keyof DesignToken = 'variable', flatten: boolean = true) => {
+  if (!path) return designTokens
+  
   const token = get(designTokens, path)
 
   if (key && token?.[key]) { return token[key] }
@@ -174,7 +186,9 @@ export const jsFull = ({ tokens }) => {
  * @param {keyof DesignToken} variable Returns the variable if exists if true
  * @param {boolean} flatten If the path gives an object, returns a deeply flattened object with "key" used as values.
  */
-export const $tokens = (path, key = 'variable', flatten: boolean = true) => {
+export const $tokens = (path = undefined, key = 'variable', flatten: boolean = true) => {
+  if (!path) return designTokens
+
   const token = get(designTokens, path)
 
   if (key && token?.[key]) { return token[key] }

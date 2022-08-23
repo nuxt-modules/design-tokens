@@ -2,7 +2,7 @@ import chroma, { Color } from 'chroma-js'
 // @ts-ignore
 import type { DesignTokens } from '#design-tokens/types'
 
-export default (
+export const palette = (
   color: string,
   suffixes: Array<string | number> = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900],
   padding: number = 0.1
@@ -31,5 +31,8 @@ export default (
     return colorRange
   }
 
-  return scalePalette(color)
+  return {
+    ...scalePalette(color),
+    palette: true
+  }
 }

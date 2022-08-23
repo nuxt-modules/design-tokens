@@ -7,7 +7,9 @@ import localModule from '../../src/module'
 // const resolveThemeDir = (path: string) => resolve(themeDir, path)
 
 export default defineNuxtConfig({
-  modules: [localModule, '@nuxtjs/tailwindcss'],
+  // @ts-ignore
+  modules: [localModule],
+
   theme: {
     meta: {
       name: 'Playground Theme',
@@ -17,6 +19,7 @@ export default defineNuxtConfig({
       motd: true
     }
   },
+
   tailwindcss: {
     viewer: false
   }

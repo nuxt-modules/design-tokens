@@ -43,28 +43,34 @@
     "prepare": "yarn dev:prepare"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.6",
+    "@nuxt/kit": "^3.0.0-rc.8",
     "browser-style-dictionary": "^3.1.1-browser.1",
     "chroma-js": "^2.4.2",
-    "untyped": "^0.4.4"
+    "csstype": "^3.1.0",
+    "paneer": "^0.0.1",
+    "postcss-custom-properties": "^12.1.8",
+    "postcss-easing-gradients": "^3.0.1",
+    "postcss-nested": "^5.0.6",
+    "to-ast": "^1.0.0",
+    "untyped": "^0.4.5"
   },
   "devDependencies": {
     "@nuxt-themes/docus": "npm:@nuxt-themes/docus-edge@latest",
     "@nuxt/module-builder": "^0.1.7",
-    "@nuxt/schema": "^3.0.0-rc.6",
+    "@nuxt/schema": "^3.0.0-rc.8",
     "@nuxt/test-utils": "npm:@nuxt/test-utils-edge@latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@nuxtjs/tailwindcss": "npm:@nuxtjs/tailwindcss-edge@latest",
     "browser-style-dictionary": "^3.1.1-browser.1",
-    "c8": "^7.11.3",
-    "eslint": "^8.20.0",
+    "c8": "^7.12.0",
+    "eslint": "^8.22.0",
     "globby": "^13.1.2",
     "husky": "^8.0.1",
     "jiti": "^1.14.0",
     "lint-staged": "^13.0.3",
     "lodash": "^4.17.21",
     "nuxt": "npm:nuxt3@latest",
-    "pathe": "^0.3.2",
-    "vitest": "^0.18.1"
+    "pathe": "^0.3.5",
+    "vitest": "^0.22.1"
   }
 }

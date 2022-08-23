@@ -1,52 +1,104 @@
 <template>
   <div
-    class="app flex flex-col bg-lila text-lavender relative overflow-y-auto"
+    class="app"
   >
-    <header class="flex items-center px-8 py-4 sticky top-0 w-full bg-black z-50">
-      <span class="font-bold">
-        Hello World
+    <header>
+      <span>
+        @nuxtjs/design-tokens
       </span>
     </header>
 
-    <div
-      class="flex-1 rounded-lg relative z-0 p-8 overflow-y-auto"
-    >
-      <p class="flex items-center justify-center w-64 h-64 bg-gradient-to-r from-primary-50 to-primary-900 rounded-xl rounded-lg ring-4 ring-black">
-        Primary
-      </p>
-      <p class="flex items-center justify-center w-64 h-64 bg-black rounded-xl mt-8 rounded-lg ring-4 ring-black">
-        Black
-      </p>
-      <p class="flex items-center justify-center w-64 h-64 bg-grape rounded-xl mt-8 rounded-lg ring-4 ring-black">
-        Grape
-      </p>
-      <p class="text-black flex items-center justify-center w-64 h-64 bg-lavender rounded-xl mt-8 rounded-lg ring-4 ring-black">
-        Lavender
-      </p>
-      <p class="flex items-center justify-center w-64 h-64 bg-velvet-500 rounded-xl mt-8 rounded-lg ring-4 ring-black">
-        Velvet
-      </p>
-    </div>
+    <section>
+      <Block :variants="['primary']" />
+      <Block :variants="['black']" />
+      <Block :variants="['grape']" />
+      <Block :variants="['lila']" />
+      <Block :variants="['velvet']" />
+    </section>
 
-    <footer class="flex justify-between items-center px-8 py-4 sticky top-0 w-full bg-black z-50">
-      <span class="font-bold">
+    <footer>
+      <span>
         {{ 'Footer' }}
       </span>
 
-      <span class="font-semibold">Built with @nuxtjs/design-tokens</span>
+      <span>Built with @nuxtjs/design-tokens</span>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 // const { fetch: fetchTokens } = useTokens()
+
 // const { data } = await useAsyncData(fetchTokens)
 </script>
+
+<style>
+html {
+  font-family: Inter, sans-serif;
+}
+</style>
 
 <style scoped lang="postcss">
 .app {
   height: 100vh;
   width: 100vw;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  overflow-y: auto;
   background-color: $dt('colors.primary.100');
+  color: white;
+
+  @dark {
+    background-color: $dt('colors.primary.200');
+  }
+
+  @screen lg {
+    background-color: $dt('colors.primary.900');
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: $dt('colors.black');
+    z-index: 50;
+
+    span {
+      font-weight: bold;
+    }
+  }
+
+  section {
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+    padding: 1rem 2rem;
+    z-index: 50;
+
+    & > * + * {
+      margin-top: 1rem;
+    }
+  }
+
+  footer {
+    background-color: $dt('colors.black');
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: $dt('colors.black');
+    z-index: 50;
+
+    span {
+      font-weight: bold;
+    }
+  }
 }
 </style>
