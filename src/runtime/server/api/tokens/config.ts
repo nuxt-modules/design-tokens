@@ -3,6 +3,7 @@ import { defineEventHandler } from 'h3'
 import * as p from 'paneer'
 import * as r from 'recast'
 import toAST from 'to-ast'
+// @ts-ignore
 import { useStorage } from '#imports'
 import { DesignTokens } from '#design-tokens/types'
 
@@ -78,8 +79,8 @@ export default defineEventHandler(async () => {
 
         let newContext
 
-        // compose() handling
         if (value.composed) {
+          // compose() handling
           delete value.composed
           newContext = r.types.builders.objectProperty(
             resolveKey(key),
@@ -88,9 +89,8 @@ export default defineEventHandler(async () => {
               [r.types.builders.objectExpression([])]
             )
           )
-        }
-        // palette() handling
-        else if (value.palette) {
+        } else if (value.palette) {
+          // palette() handling
           delete value.palette
           newContext = r.types.builders.objectProperty(
             resolveKey(key),
@@ -103,9 +103,8 @@ export default defineEventHandler(async () => {
           // Early return as we can skip the rest of the palette for this key
           target.push(newContext)
           return
-        }
-        // Any other cases
-        else {
+        } else {
+          // Any other cases
           newContext = r.types.builders.objectProperty(
             resolveKey(key),
             r.types.builders.objectExpression([])
