@@ -4,6 +4,8 @@ import { treeWalker } from './references'
 import { tokenHelpers } from './tokenHelpers'
 import { DesignTokensType, DesignTokenType, TokenHelperOptionsType, getFunction } from './types-strings'
 
+export { treeWalker }
+
 /**
  * Formats
  */

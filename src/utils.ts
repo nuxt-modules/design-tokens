@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import { kebabCase } from 'scule'
-import Consola from 'consola'
+import consola from 'consola'
 import { name, version } from '../package.json'
 import type { ModuleOptions } from './index'
 import { DesignTokensPaths } from '#design-tokens/types'
@@ -19,7 +19,7 @@ export const MODULE_DEFAULTS: ModuleOptions = {
 
 // Logging
 // Do not import @nuxt/kit here
-const _logger = Consola
+const _logger = consola
 function useLogger (scope) {
   return scope ? _logger.withScope(scope) : logger
 }
