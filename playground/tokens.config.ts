@@ -6,4 +6,7 @@ import { defineTokens } from '../src'
  */
 
 export default defineTokens({
+  components: {
+
+  }
 })

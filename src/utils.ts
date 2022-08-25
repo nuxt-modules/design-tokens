@@ -1,11 +1,9 @@
-import { mkdir } from 'fs/promises'
-import { existsSync } from 'fs'
-import { defu } from 'defu'
-import { resolve } from 'pathe'
 import chalk from 'chalk'
-import { requireModule, useLogger } from '@nuxt/kit'
+import { kebabCase } from 'scule'
+import Consola from 'consola'
 import { name, version } from '../package.json'
-import type { NuxtDesignTokens, ModuleOptions } from './index'
+import type { ModuleOptions } from './index'
+import { DesignTokensPaths } from '#design-tokens/types'
 
 export interface NuxtLayer {
   config: any
@@ -20,65 +18,16 @@ export const MODULE_DEFAULTS: ModuleOptions = {
 }
 
 // Logging
+// Do not import @nuxt/kit here
+const _logger = Consola
+function useLogger (scope) {
+  return scope ? _logger.withScope(scope) : logger
+}
 export const logger = useLogger('design-tokens')
-export const pkgName = chalk.magentaBright(name)
 
 // Package datas
 export { name, version }
-
-export const resolveConfig = (layer: NuxtLayer, key: string, configFile = `${key}.config`) => {
-  const value = layer.config?.designTokens?.[key] || MODULE_DEFAULTS[key]
-  let config = {}
-
-  let filePath: string
-
-  if (typeof value === 'boolean') {
-    filePath = resolve(layer.cwd, configFile)
-  } else if (typeof value === 'string') {
-    filePath = resolve(layer.cwd, value)
-  } else if (typeof value === 'object') {
-    config = value
-  }
-
-  if (filePath) {
-    try {
-      const _file = requireModule(filePath, { clearCache: true })
-      if (_file) { config = _file }
-    } catch (_) {}
-  }
-
-  return { filePath, config }
-}
-
-/**
- * Resolve `tokens` config layers from `extends` layers and merge them via `defu()`.
- */
-export const resolveTokens = (layers: NuxtLayer[]) => {
-  const tokensFilePaths: string[] = []
-  let tokens = {} as NuxtDesignTokens
-
-  const splitLayer = (layer: NuxtLayer) => {
-    // Deeply merge tokens
-    // In opposition to defaults, here arrays should also be merged.
-    if (layer.config?.designTokens?.tokens || MODULE_DEFAULTS.tokens) {
-      const { config: layerTokens, filePath: _layerTokensFilePath } = resolveConfig(layer, 'tokens', 'tokens.config')
-
-      if (_layerTokensFilePath) { tokensFilePaths.push(_layerTokensFilePath) }
-
-      tokens = defu(tokens, layerTokens)
-    }
-  }
-
-  for (const layer of layers) { splitLayer(layer) }
-
-  return { tokensFilePaths, tokens }
-}
-
-export const createTokensDir = async (path: string) => {
-  if (!existsSync(path)) {
-    await mkdir(path, { recursive: true })
-  }
-}
+export const pkgName = chalk.magentaBright(name)
 
 /**
  * Make a list of `get()` compatible paths for any object
@@ -105,4 +54,23 @@ export const objectPaths = (data: any) => {
   }
   step(data)
   return output
+}
+
+/**
+ * Resolve a `var(--token)` value from a token path.
+ */
+export const resolveVariableFromPath = (path: DesignTokensPaths): string => `var(--${path.split('.').map(key => kebabCase(key)).join('-')})`
+
+/**
+ * Get a key from an object with a dotted syntax.
+ * @example get({ foot: { bar: 'baz' } }, 'foo.bar') // 'baz'
+ */
+export const get = (obj, path, defValue = undefined) => {
+  if (!path) { return undefined }
+  const pathArray = Array.isArray(path) ? path : path.match(/([^[.\]])+/g)
+  const result = pathArray.reduce(
+    (prevObj, key) => prevObj && prevObj[key],
+    obj
+  )
+  return result === undefined ? defValue : result
 }

@@ -1,15 +1,19 @@
-import type { Ref } from 'vue'
-import { kebabCase } from 'scule'
-import type { DesignTokensPaths } from '#design-tokens/types'
-import { defineNuxtPlugin, unref } from '#imports'
+// import type { Ref } from 'vue'
+// import { kebabCase } from 'scule'
+// @ts-ignore
+// import type { DesignTokensPaths } from '#design-tokens/types'
+// @ts-ignore
+import { defineNuxtPlugin/* , unref */ } from '#imports'
 
 export default defineNuxtPlugin(() => {
-  const resolveToken = (path: DesignTokensPaths | Ref<DesignTokensPaths>): string => `var(--${unref(path).split('.').map(key => kebabCase(key)).join('-')})`
+  // const resolveVariableFromPath = (path: DesignTokensPaths | Ref<DesignTokensPaths>): string => `var(--${unref(path).split('.').map(key => kebabCase(key)).join('-')})`
 
   return {
+    /*
     provide: {
-      tokens: resolveToken,
-      dt: resolveToken
+      tokens: resolveVariableFromPath,
+      dt: resolveVariableFromPath
     }
+    */
   }
 })

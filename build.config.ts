@@ -28,6 +28,7 @@ export default defineBuildConfig({
     'unplugin',
     '#design-tokens',
     'browser-style-dictionary',
+    'consola',
     'ufo',
     'jiti',
     'pathe',

@@ -4,8 +4,8 @@ import * as p from 'paneer'
 import * as r from 'recast'
 import toAST from 'to-ast'
 // @ts-ignore
+import type { DesignTokens } from '../../../../index'
 import { useStorage } from '#imports'
-import { DesignTokens } from '#design-tokens/types'
 
 export default defineEventHandler(async () => {
   const storage = useStorage()

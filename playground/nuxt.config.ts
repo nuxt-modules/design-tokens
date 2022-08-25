@@ -12,9 +12,5 @@ export default defineNuxtConfig({
 
   extends: [resolveThemeDir('./theme')]
 
-  /*
-  designTokens: {
-    server: false
-  }
-  */
+  // modules: ['@nuxtjs/tailwindcss']
 })

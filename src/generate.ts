@@ -3,8 +3,8 @@ import { rm, writeFile } from 'fs/promises'
 import type { Core as Instance } from 'browser-style-dictionary/types/browser'
 import StyleDictionary from 'browser-style-dictionary/browser.js'
 import { Dictionary } from 'browser-style-dictionary/types/Dictionary'
-import { tsTypesDeclaration, tsFull, jsFull } from './formats'
-import { createTokensDir } from './utils'
+import { tsTypesDeclaration, tsFull, jsFull, treeWalker } from './formats'
+import { createTokensDir } from './config'
 import type { NuxtDesignTokens } from './index'
 
 export const stubTokens = async (buildPath: string, force = false) => {
@@ -23,7 +23,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
 
     if (force && existsSync(path)) { await rm(path) }
 
-    if (!existsSync(path)) { await writeFile(path, stubbingFunction ? stubbingFunction({ tokens: {} }) : '') }
+    if (!existsSync(path)) { await writeFile(path, stubbingFunction ? stubbingFunction({ tokens: {}, allTokens: [] } as any) : '') }
   }
 }
 
@@ -41,6 +41,18 @@ export const getStyleDictionaryInstance = async (tokens: NuxtDesignTokens, build
     name: 'typescript/types-declaration',
     formatter ({ dictionary }) {
       return tsTypesDeclaration(dictionary)
+    }
+  })
+
+  styleDictionary.registerFormat({
+    name: 'css/full',
+    formatter ({ dictionary, options }) {
+      const selector = options.selector ? options.selector : ':root'
+      const { outputReferences } = options
+      const { formattedVariables } = StyleDictionary.formatHelpers
+      const { aliased } = treeWalker(dictionary.tokens, false)
+      dictionary.allTokens = dictionary.allTokens.filter(token => !aliased[token.path.join('.')])
+      return `${selector} {\n` + formattedVariables({ format: 'css', dictionary, outputReferences }) + '\n}\n'
     }
   })
 
@@ -115,7 +127,7 @@ export const getStyleDictionaryInstance = async (tokens: NuxtDesignTokens, build
         files: [
           {
             destination: 'tokens.css',
-            format: 'css/variables'
+            format: 'css/full'
           }
         ]
       },
@@ -171,7 +183,7 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
 export const generateTokens = async (
   tokens: NuxtDesignTokens,
   buildPath: string,
-  silent = true
+  silent = false
 ) => {
   // Check for tokens directory existence; it might get cleaned-up from `.nuxt`
   if (!existsSync(buildPath)) { await createTokensDir(buildPath) }

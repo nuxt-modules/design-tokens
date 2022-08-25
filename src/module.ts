@@ -14,7 +14,8 @@ import { defu } from 'defu'
 import type { Nitro } from 'nitropack'
 import { join } from 'pathe'
 import { generateTokens } from './generate'
-import { logger, name, version, NuxtLayer, resolveTokens, MODULE_DEFAULTS, createTokensDir } from './utils'
+import { logger, name, version, NuxtLayer, MODULE_DEFAULTS } from './utils'
+import { resolveConfigTokens, createTokensDir } from './config'
 import { registerTransformPlugin } from './transform'
 import type { NuxtDesignTokens, ModuleOptions } from './index'
 
@@ -34,6 +35,13 @@ export default defineNuxtModule<ModuleOptions>({
       tokensFilePaths: [],
       server: moduleOptions.server
     }
+
+    // Check if project uses TailwindCSS
+    let hasTailwind = false
+    // @ts-ignore
+    nuxt.hook('tailwindcss:config', () => {
+      hasTailwind = true
+    })
 
     // Local last tokens count var
     let lastTokensCount = 0
@@ -73,7 +81,7 @@ export default defineNuxtModule<ModuleOptions>({
     // Refresh configurations
     const refreshTokens = async (nitro?: Nitro) => {
       // Resolve tokens.config configuration from every layer
-      const { tokensFilePaths, tokens } = resolveTokens(layers as NuxtLayer[])
+      const { tokensFilePaths, tokens } = resolveConfigTokens(layers as NuxtLayer[])
 
       if (moduleOptions.tokens) { privateConfig.tokensFilePaths = tokensFilePaths }
 
@@ -145,7 +153,7 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     // Register `$dt()` transform plugin
-    registerTransformPlugin(nuxt, { tokensDir, tokensFilePaths: tokensFilePaths.map(path => resolveModule(path)) })
+    registerTransformPlugin(nuxt, { tokensDir, tokensFilePaths: tokensFilePaths.map(path => resolveModule(path)), hasTailwind })
 
     // Inject typings
     nuxt.hook('prepare:types', (opts) => {

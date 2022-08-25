@@ -9,7 +9,7 @@
     </header>
 
     <section>
-      <Block :variants="['primary']" />
+      <Block :variants="variants" @click="makeRounded" />
       <Block :variants="['black']" />
       <Block :variants="['grape']" />
       <Block :variants="['lila']" />
@@ -27,9 +27,11 @@
 </template>
 
 <script setup lang="ts">
-// const { fetch: fetchTokens } = useTokens()
+const variants = ref(['primary'])
 
-// const { data } = await useAsyncData(fetchTokens)
+const makeRounded = () => {
+  variants.value.push('rounded')
+}
 </script>
 
 <style>

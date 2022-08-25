@@ -57,10 +57,7 @@ export default defineTokens({
           backgroundColor: '{colors.lila}'
         },
         velvet: {
-          backgroundColor: '{colors.velvet}',
-          ':hover': {
-            border: '4px solid red'
-          }
+          backgroundColor: '{colors.velvet}'
         },
         grape: {
           backgroundColor: '{colors.grape}'
