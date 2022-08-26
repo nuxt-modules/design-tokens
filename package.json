@@ -44,9 +44,11 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.8",
+    "@stitches/stringify": "^1.2.8",
     "browser-style-dictionary": "^3.1.1-browser.1",
     "chroma-js": "^2.4.2",
     "csstype": "^3.1.0",
+    "json5": "^2.2.1",
     "paneer": "^0.0.1",
     "postcss-custom-properties": "^12.1.8",
     "postcss-easing-gradients": "^3.0.1",

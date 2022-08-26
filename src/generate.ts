@@ -183,7 +183,7 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
 export const generateTokens = async (
   tokens: NuxtDesignTokens,
   buildPath: string,
-  silent = false
+  silent = true
 ) => {
   // Check for tokens directory existence; it might get cleaned-up from `.nuxt`
   if (!existsSync(buildPath)) { await createTokensDir(buildPath) }

@@ -9,11 +9,6 @@ export default defineBuildConfig({
       name: 'index'
     },
     {
-      input: './src/formats.ts',
-      builder: 'rollup',
-      name: 'formats'
-    },
-    {
       input: './src/generate.ts',
       builder: 'rollup',
       name: 'generate'
