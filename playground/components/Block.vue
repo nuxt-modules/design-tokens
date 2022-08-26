@@ -1,12 +1,17 @@
 <script setup lang="ts">
 defineProps({
-  ...$variantProps('block')
+  variants: {
+    type: Array,
+    default: () => []
+  }
 })
 </script>
 
 <template>
-  <button :class="['block', ...variants]">
-    {{ variants[0] }}
+  <button :class="[...variants]">
+    <p>
+      {{ variants[0] }}
+    </p>
   </button>
 </template>
 
@@ -23,12 +28,24 @@ css({
     '&:hover': {
       border: '4px solid {colors.velvet}'
     },
+    '& > p': {
+      color: '{colors.primary}',
+      fontSize: '24px'
+    },
     variants: {
       primary: {
-        backgroundColor: '{colors.primary.500}'
+        backgroundColor: '{colors.primary.900}',
+        '&.rounded': {
+          'border-radius': '64px',
+          'borderColor': 'red'
+        }
       },
       black: {
-        backgroundColor: '{colors.black}'
+        backgroundColor: '{colors.black}',
+        '&.rounded': {
+          'border-radius': '32px',
+          'borderColor': 'blue'
+        }
       },
       lavender: {
         backgroundColor: '{colors.lavender}'
@@ -51,10 +68,4 @@ css({
     }
   }
 })
-</style>
-
-<style scoped lang="postcss">
-button {
-  background-color: $dt('');
-}
 </style>

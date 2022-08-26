@@ -29,46 +29,5 @@ export default defineTokens({
     lg: { value: '1024px' },
     xl: { value: '1280px' },
     '2xl': { value: '1536px' }
-  },
-
-  components: {
-    block: compose({
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '16px',
-      width: '320px',
-      height: '320px',
-      border: '4px solid {colors.black}',
-      ':hover': {
-        border: '4px solid {colors.velvet}'
-      },
-      variants: {
-        primary: {
-          backgroundColor: '{colors.primary.500}'
-        },
-        black: {
-          backgroundColor: '{colors.black}'
-        },
-        lavender: {
-          backgroundColor: '{colors.lavender}'
-        },
-        lila: {
-          backgroundColor: '{colors.lila}'
-        },
-        velvet: {
-          backgroundColor: '{colors.velvet}'
-        },
-        grape: {
-          backgroundColor: '{colors.grape}'
-        },
-        rounded: {
-          borderRadius: '50%'
-        },
-        padded: {
-          padding: '4rem'
-        }
-      }
-    })
   }
 })

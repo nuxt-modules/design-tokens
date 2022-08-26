@@ -1,5 +1,6 @@
 import { createUnplugin } from 'unplugin'
 import { Nuxt } from '@nuxt/schema'
+import { file, thisExpression } from '@babel/types'
 import { resolveDt, resolveScreen, resolveComponent, resolveScheme, resolveVariantProps } from './resolvers'
 import { resolveStyleTs } from './css'
 
@@ -82,13 +83,28 @@ export const unpluginDesignTokensComponents = createUnplugin<any>(() => {
           code = resolveStyleTs(code)
 
           // Cast `lang="ts|js"` to `lang="postcss"`
-          code = code.replace(styleTsLangRegex, (styleTag, lang) => styleTag.replace(lang, 'postcss'))
+          code = code.replace(
+            styleTsLangRegex,
+            (styleTag, lang) => {
+              styleTag = styleTag.replace(lang, 'postcss')
+
+              if (!styleTag.includes('module')) {
+                styleTag = styleTag.replace('>', ` ${Date.now()}>`)
+              }
+
+              return styleTag
+            }
+          )
+
+          console.log(code)
 
           return code
         }
       )
 
-      return { code }
+      return {
+        code
+      }
     }
   }
 })

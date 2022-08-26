@@ -9,11 +9,14 @@
     </header>
 
     <section>
-      <Block :variants="variants" @click="makeRounded" />
-      <Block :variants="['black']" />
-      <Block :variants="['grape']" />
-      <Block :variants="['lila']" />
-      <Block :variants="['velvet']" />
+      <button style="font-weight: bold; background-color: gray; padding: 1rem; border-radius: 16px;" @click="makeRounded">
+        Make all rounded!
+      </button>
+      <Block :variants="['primary', variants]" />
+      <Block :variants="['black', ...variants]" />
+      <Block :variants="['grape', ...variants]" />
+      <Block :variants="['lila', ...variants]" />
+      <Block :variants="['velvet', ...variants]" />
     </section>
 
     <footer>
@@ -27,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-const variants = ref(['primary'])
+const variants = ref([])
 
 const makeRounded = () => {
   variants.value.push('rounded')
