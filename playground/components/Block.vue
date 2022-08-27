@@ -1,5 +1,10 @@
 <script setup lang="ts">
 defineProps({
+  test: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
   ...$variantsProps('button')
 })
 </script>
@@ -28,21 +33,6 @@ css({
     },
     '& > p': {
       fontSize: '24px',
-    },
-    "@dark": {
-      "& > p": {
-        color: 'red'
-      }
-    },
-    "@light": {
-      "& > p": {
-        color: 'blue'
-      }
-    },
-    "@screen:lg": {
-      "& > p": {
-        border: "2px solid red"
-      }
     },
     variants: {
       primary: {

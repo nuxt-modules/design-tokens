@@ -109,7 +109,6 @@ export const unpluginNuxtStyleComponents = createUnplugin<any>(() => {
       code = code.replace(
         scriptRegex,
         (scriptTag) => {
-          console.log({ variantProps })
           scriptTag = resolveDt(scriptTag, '\'')
           scriptTag = resolveVariantProps(scriptTag, variantProps)
           return scriptTag

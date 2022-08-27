@@ -71,12 +71,16 @@ const plugin = _ => ({
 
         if (cssMatches) {
           embeddedFile.codeGen.addText('declare const css: (declaration: import(\'@nuxtjs/design-tokens\').CSS<ComponentTemplateTags__VLS, import(\'@nuxtjs/design-tokens\').NuxtStyleTheme>) => any')
+
+          /* WIP
           try {
             const css = unwrapCss(cssMatches[0])
             const cssDeclaration = parse(css)
             console.log({ cssDeclaration, css })
-            embeddedFile.codeGen.addText(`/* ${JSON.stringify(cssDeclaration)} */\n`)
+            embeddedFile.codeGen.addText(`${JSON.stringify(cssDeclaration)}`)
           } catch (e) {}
+          */
+
           embeddedFile.codeGen.addText('\nconst __VLS_css = ')
           embeddedFile.codeGen.addCode2(
             cssMatches[0],
