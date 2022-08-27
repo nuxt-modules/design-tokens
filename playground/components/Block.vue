@@ -1,10 +1,5 @@
 <script setup lang="ts">
 defineProps({
-  test: {
-    type: Boolean,
-    required: true,
-    default: true
-  },
   ...$variantsProps('button')
 })
 </script>

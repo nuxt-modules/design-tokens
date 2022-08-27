@@ -10,7 +10,13 @@ export default defineNuxtConfig({
     '@nuxtjs/design-tokens': resolveThemeDir('../src/index.ts')
   },
 
-  extends: [resolveThemeDir('./theme')]
+  extends: [resolveThemeDir('./theme')],
 
   // modules: ['@nuxtjs/tailwindcss'],
+
+  nitro: {
+    externals: {
+      inline: ['recast', 'ast-types']
+    }
+  }
 })

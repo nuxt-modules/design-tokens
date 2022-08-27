@@ -7,11 +7,6 @@ export default defineBuildConfig({
       input: './src/index.ts',
       builder: 'rollup',
       name: 'index'
-    },
-    {
-      input: './src/generate.ts',
-      builder: 'rollup',
-      name: 'generate'
     }
   ],
   externals: [
@@ -20,6 +15,7 @@ export default defineBuildConfig({
     'generate.mjs',
     // ??
     'json5',
+    'recast',
     'scule',
     'unplugin',
     '#design-tokens',
