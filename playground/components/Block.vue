@@ -6,8 +6,8 @@ defineProps({
 
 <template>
   <button :class="{ ...$props }">
-    <p>
-      {{ $props }}
+    <p v-for="[key, value] in Object.entries($props)" :key="key">
+      {{ value ? key : '' }}
     </p>
   </button>
 </template>
@@ -27,7 +27,8 @@ css({
       border: '4px solid {colors.velvet}'
     },
     '& > p': {
-      fontSize: '24px',
+      fontSize: '32px',
+      textDecoration: 'underline'
     },
     variants: {
       primary: {

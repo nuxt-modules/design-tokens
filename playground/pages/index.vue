@@ -9,9 +9,6 @@
     </header>
 
     <section>
-      <button style="font-weight: bold; background-color: gray; padding: 1rem; border-radius: 16px;" @click="makeRounded">
-        Make all rounded!
-      </button>
       <Block primary />
       <Block lila />
       <Block lavender />
@@ -28,14 +25,6 @@
     </footer>
   </div>
 </template>
-
-<script setup lang="ts">
-const variants = ref([])
-
-const makeRounded = () => {
-  variants.value.push('rounded')
-}
-</script>
 
 <style>
 html {
