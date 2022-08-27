@@ -1,16 +1,28 @@
-import { kebabCase } from 'scule'
+import { camelCase, kebabCase, upperFirst } from 'scule'
 import chalk from 'chalk'
+import * as recast from 'recast'
 import { $tokens } from '../index'
 import { logger } from '../utils'
 // @ts-ignore
-import type { DesignTokens, DesignToken } from '#design-tokens/types'
+import type { NuxtDesignTokens, DesignToken } from '#design-tokens/types'
 
-const variantPropsRegex = /\$variantProps\('(.*)'\)/g
+const shortVariantsPropsRegex = /\$variantsProps\('(.*)'\)/g
+const fullVariantsPropsRegex = /\$variantsProps\(('(.*?)'),\s'(.*?)'\)/g
 const screenRegex = /(@screen\s(.*?)\s{)/g
 const darkRegex = /(@dark\s{)/g
 const lightRegex = /(@light\s{)/g
 const dtRegex = /\$dt\('(.*?)'\)/g
 const componentRegex = /@component\('(.*?)'\);/g
+
+export const resolverRegexes = {
+  shortVariantsProps: shortVariantsPropsRegex,
+  fullVariantsProps: fullVariantsPropsRegex,
+  screen: screenRegex,
+  dark: darkRegex,
+  light: lightRegex,
+  dt: dtRegex,
+  component: componentRegex
+}
 
 /**
  * Resolve `$dt()` declarations.
@@ -28,28 +40,59 @@ export const resolveDt = (code: string, wrapper = undefined) => {
 /**
  * Resolve `@component()`.
  */
-export const resolveVariantProps = (code: string): string => {
-  code = code.replace(variantPropsRegex, (_, componentName) => {
-    const variants = $tokens(('components.' + componentName + '.variants') as any, { key: undefined, flatten: false, silent: true })
+export const resolveVariantProps = (code: string, variantProps: any): string => {
+  if (!variantProps) {
+    return '{}'
+  }
 
-    if (!variants) {
-      return `{
-        variants: {
-          type: Array,
-          required: false,
-          default: []
-        }
-      }`
-    }
+  const propKeyToAst = (ast: any, key: string, prefix: string) => {
+    ast.properties.push(
+      recast.types.builders.objectProperty(
+        recast.types.builders.stringLiteral(camelCase(camelCase(prefix + upperFirst(key)))),
+        recast.types.builders.objectExpression([
+          recast.types.builders.objectProperty(
+            recast.types.builders.identifier('type'),
+            recast.types.builders.identifier('Boolean')
+          ),
+          recast.types.builders.objectProperty(
+            recast.types.builders.identifier('required'),
+            recast.types.builders.identifier('false')
+          ),
+          recast.types.builders.objectProperty(
+            recast.types.builders.identifier('default'),
+            recast.types.builders.identifier('false')
+          )
+        ])
+      )
+    )
+  }
 
-    return `{
-      variants: {
-        type: Array as import('vue').PropType<${Object.keys(variants).map(variant => `'${variant}'`).join(' | ')}>,
-        required: false,
-        default: []
+  // $variantProps('tagName')
+  code = code.replace(shortVariantsPropsRegex,
+    (_, tagName) => {
+      const ast = recast.types.builders.objectExpression([])
+      if (variantProps[tagName]) {
+        Object.keys(variantProps[tagName])
+          .forEach(
+            propKey => propKeyToAst(ast, propKey, '')
+          )
       }
-    }`
-  })
+      return recast.print(ast).code
+    })
+
+  // $variantProps('tagName', 'prefix')
+  code = code.replace(fullVariantsPropsRegex,
+    (_, tagName, prefix) => {
+      const ast = recast.types.builders.objectExpression([])
+      if (variantProps[tagName]) {
+        Object.keys(variantProps[tagName])
+          .forEach(
+            propKey => propKeyToAst(ast, propKey, prefix)
+          )
+      }
+      return recast.print(ast).code
+    }
+  )
 
   return code
 }
@@ -124,7 +167,7 @@ export const resolveComponent = (code: string): string => {
 /**
  * Resolve unwrapped style properties for `@component()` declaration.
  */
-export const resolveStyleFromComponent = (component: DesignTokens): string => {
+export const resolveStyleFromComponent = (component: NuxtDesignTokens): string => {
   // Prepare style declaration
   let styleDeclaration = ''
   const styles = {

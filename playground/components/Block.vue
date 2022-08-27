@@ -1,16 +1,13 @@
 <script setup lang="ts">
 defineProps({
-  variants: {
-    type: Array,
-    default: () => []
-  }
+  ...$variantsProps('button')
 })
 </script>
 
 <template>
-  <button :class="[...variants]">
+  <button :class="{ ...$props }">
     <p>
-      {{ variants[0] }}
+      {{ $props }}
     </p>
   </button>
 </template>
@@ -25,27 +22,34 @@ css({
     width: '320px',
     height: '320px',
     border: '4px solid {colors.black}',
+    position: 'relative',
     '&:hover': {
       border: '4px solid {colors.velvet}'
     },
     '& > p': {
-      color: '{colors.primary}',
-      fontSize: '24px'
+      fontSize: '24px',
+    },
+    "@dark": {
+      "& > p": {
+        color: 'red'
+      }
+    },
+    "@light": {
+      "& > p": {
+        color: 'blue'
+      }
+    },
+    "@screen:lg": {
+      "& > p": {
+        border: "2px solid red"
+      }
     },
     variants: {
       primary: {
         backgroundColor: '{colors.primary.900}',
-        '&.rounded': {
-          'border-radius': '64px',
-          'borderColor': 'red'
-        }
       },
       black: {
         backgroundColor: '{colors.black}',
-        '&.rounded': {
-          'border-radius': '32px',
-          'borderColor': 'blue'
-        }
       },
       lavender: {
         backgroundColor: '{colors.lavender}'
@@ -64,7 +68,7 @@ css({
       },
       padded: {
         padding: '4rem'
-      }
+      },
     }
   }
 })

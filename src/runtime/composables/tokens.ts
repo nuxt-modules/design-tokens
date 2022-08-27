@@ -1,4 +1,4 @@
-import type { NuxtDesignTokens } from '../../index'
+import type { NuxtThemeTokens } from '../../index'
 import { useNuxtApp } from '#imports'
 
 export const useTokens = () => {
@@ -7,6 +7,6 @@ export const useTokens = () => {
   return {
     $tokens,
     $dt: $tokens,
-    fetch: async (): Promise<NuxtDesignTokens> => await $fetch('/api/_design-tokens/tokens')
+    fetch: async (): Promise<NuxtThemeTokens> => await $fetch('/api/_design-tokens/tokens')
   }
 }

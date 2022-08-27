@@ -7,10 +7,10 @@ const resolveThemeDir = (path: string) => resolve(themeDir, path)
 
 export default defineNuxtConfig({
   alias: {
-    '@nuxtjs/design-tokens': resolveThemeDir('../src/module.ts')
+    '@nuxtjs/design-tokens': resolveThemeDir('../src/index.ts')
   },
 
   extends: [resolveThemeDir('./theme')]
 
-  // modules: ['@nuxtjs/tailwindcss']
+  // modules: ['@nuxtjs/tailwindcss'],
 })

@@ -5,7 +5,7 @@ import { useStorage, useRuntimeConfig } from '#imports'
 export default defineEventHandler(async (event) => {
   const storage = useStorage()
   const runtimeConfig = useRuntimeConfig()
-  const { server } = runtimeConfig?.designTokens || {}
+  const { server } = runtimeConfig?.style || {}
 
   if (server && isMethod(event, 'POST')) {
     try {

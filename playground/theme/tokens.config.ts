@@ -1,4 +1,4 @@
-import { defineTokens, palette, compose } from '../../src'
+import { defineTokens, palette } from '../../src'
 
 export default defineTokens({
   colors: {

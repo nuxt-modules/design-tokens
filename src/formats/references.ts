@@ -10,7 +10,7 @@ export const referencesRegex = new RegExp(
   '}', 'g'
 )
 
-export const treeWalker = (obj, typing: boolean = true, aliased = {}) => {
+export const walkTokens = (obj, typing: boolean = true, aliased = {}) => {
   let type = {}
 
   if (obj.value) {
@@ -34,7 +34,7 @@ export const treeWalker = (obj, typing: boolean = true, aliased = {}) => {
   } else {
     for (const k in obj) {
       if (obj[k] && typeof obj[k] === 'object') {
-        type[k] = treeWalker(obj[k], typing, aliased).type
+        type[k] = walkTokens(obj[k], typing, aliased).type
       }
     }
   }

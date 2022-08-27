@@ -1,7 +1,6 @@
 import { createUnplugin } from 'unplugin'
 import { Nuxt } from '@nuxt/schema'
-import { file, thisExpression } from '@babel/types'
-import { resolveDt, resolveScreen, resolveComponent, resolveScheme, resolveVariantProps } from './resolvers'
+import { resolveDt, resolveScreen, resolveComponent, resolveScheme, resolveVariantProps, resolverRegexes } from './resolvers'
 import { resolveStyleTs } from './css'
 
 const jsFilesRegex = /\.((c|m)?j|t)sx?$/g
@@ -12,10 +11,25 @@ const scriptRegex = /<script.*>(.|\n)*?<\/script>/g
 const styleTsRegex = /<style.*(scoped)?.*(lang="(ts|js)").*>(.|\n)*?<\/style>/g
 const styleTsLangRegex = /<style.*lang="(ts|js)".*>/
 
+const sfcRegexes = {
+  jsFiles: jsFilesRegex,
+  vueRoot: vueRootRegex,
+  vueStyle: vueStyleRegex,
+  template: templateRegex,
+  script: scriptRegex,
+  styleTs: styleTsRegex,
+  styleTsLang: styleTsLangRegex
+}
+
+export const regexes = {
+  ...sfcRegexes,
+  ...resolverRegexes
+}
+
 /**
  * Unplugin resolving `$dt()` `@screen`, `@light`, `@dark`, `@component` in `<style>` tags.
  */
-export const unpluginDesignTokensStyle = createUnplugin<any>((
+export const unpluginNuxtStyle = createUnplugin<any>((
   { hasTailwind }
 ) => {
   return {
@@ -46,7 +60,7 @@ export const unpluginDesignTokensStyle = createUnplugin<any>((
   }
 })
 
-export const unpluginDesignTokensComponents = createUnplugin<any>(() => {
+export const unpluginNuxtStyleComponents = createUnplugin<any>(() => {
   return {
     name: 'unplugin-nuxt-design-tokens-components',
 
@@ -66,39 +80,39 @@ export const unpluginDesignTokensComponents = createUnplugin<any>(() => {
         }
       )
 
-      // Run transforms in <script> tag
-      code = code.replace(
-        scriptRegex,
-        (code) => {
-          code = resolveDt(code, '\'')
-          return resolveVariantProps(code)
-        }
-      )
-
+      let variantProps
       code = code.replace(
         styleTsRegex,
         (...parts) => {
           let [code] = parts
 
-          code = resolveStyleTs(code)
+          const { code: _code, variantsProps: _variantProps } = resolveStyleTs(code)
+
+          code = _code
+          variantProps = _variantProps
 
           // Cast `lang="ts|js"` to `lang="postcss"`
           code = code.replace(
             styleTsLangRegex,
             (styleTag, lang) => {
               styleTag = styleTag.replace(lang, 'postcss')
-
-              if (!styleTag.includes('module')) {
-                styleTag = styleTag.replace('>', ` ${Date.now()}>`)
-              }
-
+              styleTag = styleTag.replace('>', ` ${Date.now()}>`)
               return styleTag
             }
           )
 
-          console.log(code)
-
           return code
+        }
+      )
+
+      // Run transforms in <script> tag
+      code = code.replace(
+        scriptRegex,
+        (scriptTag) => {
+          console.log({ variantProps })
+          scriptTag = resolveDt(scriptTag, '\'')
+          scriptTag = resolveVariantProps(scriptTag, variantProps)
+          return scriptTag
         }
       )
 
@@ -116,8 +130,8 @@ export const registerTransformPlugin = (nuxt: Nuxt, options: any) => {
   nuxt.hook('webpack:config', (config: any) => {
     config.plugins = config.plugins || []
     config.plugins.unshift(
-      unpluginDesignTokensStyle.webpack(options),
-      unpluginDesignTokensComponents.webpack(options)
+      unpluginNuxtStyleComponents.webpack(options),
+      unpluginNuxtStyle.webpack(options)
     )
   })
 
@@ -125,8 +139,8 @@ export const registerTransformPlugin = (nuxt: Nuxt, options: any) => {
   nuxt.hook('vite:extend', (vite: any) => {
     vite.config.plugins = vite.config.plugins || []
     vite.config.plugins.push(
-      unpluginDesignTokensStyle.vite(options),
-      unpluginDesignTokensComponents.vite(options)
+      unpluginNuxtStyleComponents.vite(options),
+      unpluginNuxtStyle.vite(options)
     )
   })
 }

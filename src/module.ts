@@ -4,7 +4,6 @@ import {
   defineNuxtModule,
   createResolver,
   resolveModule,
-  addPlugin,
   addAutoImport,
   addPluginTemplate
 } from '@nuxt/kit'
@@ -13,17 +12,17 @@ import type { ViteDevServer } from 'vite'
 import { defu } from 'defu'
 import type { Nitro } from 'nitropack'
 import { join } from 'pathe'
-import { generateTokens } from './generate'
+import { generateTokens } from './config/generate'
 import { logger, name, version, NuxtLayer, MODULE_DEFAULTS } from './utils'
-import { resolveConfigTokens, createTokensDir } from './config'
+import { resolveConfigTokens, createTokensDir } from './config/load'
 import { registerTransformPlugin } from './transform'
-import type { NuxtDesignTokens, ModuleOptions } from './index'
+import type { NuxtStyleTheme, ModuleOptions } from './index'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name,
     version,
-    configKey: 'designTokens',
+    configKey: 'style',
     compatibility: {
       nuxt: '^3.0.0-rc.5'
     }
@@ -31,7 +30,7 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: MODULE_DEFAULTS,
   async setup (moduleOptions, nuxt) {
     // Private runtime config
-    nuxt.options.runtimeConfig.designTokens = {
+    nuxt.options.runtimeConfig.style = {
       tokensFilePaths: [],
       server: moduleOptions.server
     }
@@ -49,13 +48,13 @@ export default defineNuxtModule<ModuleOptions>({
     // Nuxt `extends` key layers
     const layers = nuxt.options._layers
 
-    const privateConfig = nuxt.options.runtimeConfig.designTokens
+    const privateConfig = nuxt.options.runtimeConfig.style
 
     // `.nuxt/tokens` resolver
     const tokensDir = withTrailingSlash(nuxt.options.buildDir + '/tokens')
 
     // Set srcDir for external imports
-    globalThis.__nuxtDesignTokensBuildDir__ = tokensDir
+    globalThis.__NuxtThemeTokensBuildDir__ = tokensDir
 
     // Tokens dir resolver
     const { resolve: resolveTokensDir } = createResolver(tokensDir)
@@ -102,7 +101,7 @@ export default defineNuxtModule<ModuleOptions>({
     const buildTokens = async (nitro: Nitro, viteServer?: ViteDevServer) => {
       try {
         const start = performance.now()
-        const tokens = await nitro.storage.getItem('cache:design-tokens:tokens.json') as NuxtDesignTokens
+        const tokens = await nitro.storage.getItem('cache:design-tokens:tokens.json') as NuxtStyleTheme
         const dictionary = await generateTokens(tokens, tokensDir)
         const end = performance.now()
         const ms = Math.round(end - start)
@@ -224,9 +223,6 @@ export default defineNuxtModule<ModuleOptions>({
      * Runtime
      */
 
-    addPlugin({
-      src: resolveRuntimeModule('./plugins/tokens')
-    })
     addAutoImport({
       from: resolveRuntimeModule('./composables/tokens'),
       name: 'useTokens',

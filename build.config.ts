@@ -19,6 +19,7 @@ export default defineBuildConfig({
     'formats.mjs',
     'generate.mjs',
     // ??
+    'json5',
     'scule',
     'unplugin',
     '#design-tokens',
