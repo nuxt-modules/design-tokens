@@ -11,14 +11,14 @@ const plugin = _ => ({
       // $dt helpers
       const dtRegex = /\$dt\('(.*?)'\)/g
       embeddedFile.codeGen.addText('\ndeclare const $dt: import(\'@nuxtjs/design-tokens\').DtFunctionType\n')
-      const addDt = (match, dtKey, index) => {
+      const addDt = (match, dtKey, index, vueTag, vueTagIndex) => {
         embeddedFile.codeGen.addText(`\nconst __VLS_$dt_${camelCase(dtKey)}_${index} = `)
         embeddedFile.codeGen.addCode2(
           match,
           index,
           {
-            vueTag: 'template',
-            vueTagIndex: index,
+            vueTag: vueTag,
+            vueTagIndex: vueTagIndex,
             capabilities: {
               basic: true,
               references: true,
@@ -59,7 +59,7 @@ const plugin = _ => ({
       if (templateDtMatches) {
         sfc.template.content.replace(
           dtRegex,
-          (match, dtKey, index) => addDt(match, dtKey, index)
+          (match, dtKey, index) => addDt(match, dtKey, index, sfc.template.tag)
         )
       }
 
@@ -105,7 +105,7 @@ const plugin = _ => ({
         if (dtMatches) {
           style.content.replace(
             dtRegex,
-            (match, dtKey, index) => addDt(match, dtKey, index)
+            (match, dtKey, index) => addDt(match, dtKey, index, style.tag, i)
           )
         }
       }
