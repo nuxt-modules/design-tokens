@@ -14,7 +14,7 @@ defineProps({
   </button>
 </template>
 
-<style scoped lang="ts">
+<style lang="ts" scoped>
 css({
   button: {
     display: 'flex',
@@ -23,7 +23,7 @@ css({
     borderRadius: '16px',
     width: '320px',
     height: '320px',
-    border: '16px solid red',
+    border: '16px solid {colors.grape}',
     position: 'relative',
     '&:hover': {
       border: '8px solid blue',
@@ -34,7 +34,7 @@ css({
     },
     variants: {
       primary: {
-        backgroundColor: '{colors.primary.600}',
+        backgroundColor: '{colors.primary.500}',
       },
       black: {
         backgroundColor: '{colors.black}',

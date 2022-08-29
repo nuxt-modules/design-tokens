@@ -12,8 +12,6 @@ export default defineNuxtConfig({
 
   extends: [resolveThemeDir('./theme')],
 
-  // modules: ['@nuxtjs/tailwindcss'],
-
   nitro: {
     externals: {
       inline: ['recast', 'ast-types']

@@ -57,6 +57,7 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
         let source = style.content || ''
         source = resolveStyleTs(source)
         source = resolveStyle(source)
+
         if (style.content !== source) {
           return source
         }
@@ -78,8 +79,7 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
     },
 
     transform (code, id) {
-      const transformed = transformVueSFC(code, id)
-      if (transformed != null) { return transformed }
+      code = transformVueSFC(code, id)
 
       const { filename, query } = parseVueRequest(id)
 
@@ -184,4 +184,5 @@ function transformVueSFC (code: string, id: string) {
       return code.replace(styleTagRe, '<style$1lang="postcss"$2>')
     }
   }
+  return code
 }

@@ -3,6 +3,11 @@ import * as Utils from '../utils'
 import { DefaultThemeMap, NuxtStyleTheme, ThemeKey } from '../config'
 import { NuxtThemeTokens } from '#design-tokens/types'
 
+export type VuePseudos =
+| '&:deep('
+| '&:slotted('
+| ':global('
+
 export type AdvancedPseudos =
   | '&::cue('
   | '&::cue-region('
