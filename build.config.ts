@@ -14,6 +14,8 @@ export default defineBuildConfig({
     'formats.mjs',
     'generate.mjs',
     // ??
+    '@vue/compiler-sfc',
+    'magic-string',
     'json5',
     'recast',
     'scule',
