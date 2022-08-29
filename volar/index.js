@@ -1,8 +1,5 @@
 const { walkElementNodes } = require('@volar/vue-language-core')
 const { camelCase } = require('scule')
-const { parse } = require('json5')
-
-const unwrapCss = cssFunction => cssFunction.replace('css(', '').replace(')')
 
 /** @type {import('@volar/vue-language-core').VueLanguagePlugin} */
 const plugin = _ => ({

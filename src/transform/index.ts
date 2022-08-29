@@ -137,6 +137,7 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
           magicString.overwrite(scriptSetup.loc.start.offset, scriptSetup.loc.end.offset, newScriptSetup)
         }
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log({ error: e })
       }
 
