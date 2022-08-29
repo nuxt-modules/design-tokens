@@ -7,16 +7,6 @@ export default defineBuildConfig({
       input: './src/index.ts',
       builder: 'rollup',
       name: 'index'
-    },
-    {
-      input: './src/formats.ts',
-      builder: 'rollup',
-      name: 'formats'
-    },
-    {
-      input: './src/generate.ts',
-      builder: 'rollup',
-      name: 'generate'
     }
   ],
   externals: [
@@ -24,6 +14,10 @@ export default defineBuildConfig({
     'formats.mjs',
     'generate.mjs',
     // ??
+    '@vue/compiler-sfc',
+    'magic-string',
+    'json5',
+    'recast',
     'scule',
     'unplugin',
     '#design-tokens',

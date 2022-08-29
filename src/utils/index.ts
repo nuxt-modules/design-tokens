@@ -1,15 +1,17 @@
 import chalk from 'chalk'
 import { kebabCase } from 'scule'
 import consola from 'consola'
-import { name, version } from '../package.json'
-import type { ModuleOptions } from './index'
-import { DesignTokensPaths } from '#design-tokens/types'
+import { name, version } from '../../package.json'
+import type { ModuleOptions } from '../index'
+import type { NuxtThemeTokensPaths } from '#design-tokens/types'
 
 export interface NuxtLayer {
   config: any
   configFile: string
   cwd: string
 }
+
+export * from './types'
 
 // Default options
 export const MODULE_DEFAULTS: ModuleOptions = {
@@ -59,7 +61,7 @@ export const objectPaths = (data: any) => {
 /**
  * Resolve a `var(--token)` value from a token path.
  */
-export const resolveVariableFromPath = (path: DesignTokensPaths): string => `var(--${path.split('.').map(key => kebabCase(key)).join('-')})`
+export const resolveVariableFromPath = (path: NuxtThemeTokensPaths): string => `var(--${path.split('.').map(key => kebabCase(key)).join('-')})`
 
 /**
  * Get a key from an object with a dotted syntax.

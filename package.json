@@ -1,7 +1,7 @@
 {
   "name": "@nuxtjs/design-tokens",
   "version": "0.0.1",
-  "description": "Use Design Tokens in your Nuxt app.",
+  "description": "'Vue-native zero-runtime CSS-in-JS solution.",
   "keywords": [
     "nuxt",
     "theme",
@@ -44,15 +44,18 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.8",
+    "@stitches/stringify": "^1.2.8",
     "browser-style-dictionary": "^3.1.1-browser.1",
     "chroma-js": "^2.4.2",
     "csstype": "^3.1.0",
+    "json5": "^2.2.1",
     "paneer": "^0.0.1",
     "postcss-custom-properties": "^12.1.8",
     "postcss-easing-gradients": "^3.0.1",
     "postcss-nested": "^5.0.6",
     "to-ast": "^1.0.0",
-    "untyped": "^0.4.5"
+    "unplugin-ast": "^0.5.5",
+    "untyped": "^0.4.7"
   },
   "devDependencies": {
     "@nuxt-themes/docus": "npm:@nuxt-themes/docus-edge@latest",
@@ -61,9 +64,10 @@
     "@nuxt/test-utils": "npm:@nuxt/test-utils-edge@latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@nuxtjs/tailwindcss": "^5.3.2",
+    "@volar/vue-language-core": "^0.40.4",
     "browser-style-dictionary": "^3.1.1-browser.1",
     "c8": "^7.12.0",
-    "eslint": "^8.22.0",
+    "eslint": "^8.23.0",
     "globby": "^13.1.2",
     "husky": "^8.0.1",
     "jiti": "^1.14.0",

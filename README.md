@@ -1,4 +1,4 @@
-# @nuxtjs/design-tokens
+# @nuxtjs/style
 
 Use [Design Tokens](https://amzn.github.io/style-dictionary/#/tokens) in your Nuxt project.
 

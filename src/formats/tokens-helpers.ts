@@ -1,5 +1,5 @@
-export const tokenHelpers = (ts: boolean = false) => {
-  return `const defaultTokenHelperOptions${ts ? ': TokenHelperOptions' : ''} = {
+export const tokensHelper = (ts: boolean = false) => {
+  return `const defaultTokensHelperOptions${ts ? ': TokensHelperOptions' : ''} = {
   key: 'variable',
   flatten: true,
   silent: false
@@ -8,16 +8,16 @@ export const tokenHelpers = (ts: boolean = false) => {
 /**
  * Get a theme token by its path
  */
-export const $tokens = (path${ts ? ': DesignTokensPaths' : ''} = undefined, options${ts ? ': TokenHelperOptions' : ''} = {}) => {
-  const { key, flatten } = Object.assign(defaultTokenHelperOptions, options)
+export const $tokens = (path${ts ? ': NuxtThemeTokensPaths' : ''} = undefined, options${ts ? ': TokensHelperOptions' : ''} = {}) => {
+  const { key, flatten } = Object.assign(defaultTokensHelperOptions, options)
 
-  if (!path) return designTokens
+  if (!path) return themeTokens
 
-  if (key === 'variable' && tokenAliases[path]) {
-    return tokenAliases[path]
+  if (key === 'variable' && tokensAliases[path]) {
+    return tokensAliases[path]
   }
 
-  const token = get(designTokens, path)
+  const token = get(themeTokens, path)
 
   if (key && token?.[key]) { return token[key] }
 

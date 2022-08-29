@@ -31,9 +31,9 @@ export const DesignTokenType =
   [key: string]: any;
 }`
 
-export const DesignTokensType =
-`interface DesignTokens {
-  [key: string]: DesignTokens | DesignToken;
+export const NuxtDesignTokensType =
+`interface NuxtDesignTokens {
+  [key: string]: NuxtDesignTokens | DesignToken;
 }`
 
 export const TokenHelperOptionsType =

@@ -1,35 +1,24 @@
 import { resolveVariableFromPath } from '../utils'
 
-// browser-style-dictionary/lib/utils/references/createReferenceRegex
-const referenceRegexDefaults = {
-  opening_character: '{',
-  closing_character: '}',
-  separator: '.'
-}
-export function createReferenceRegex (opts = {}) {
-  const options = Object.assign({}, referenceRegexDefaults, opts)
+export const referencesRegex = new RegExp(
+  '\\' +
+  '{' +
+  '([^' +
+  '}' +
+  ']+)' +
+  '\\' +
+  '}', 'g'
+)
 
-  return new RegExp(
-    '\\' +
-    options.opening_character +
-    '([^' +
-    options.closing_character +
-    ']+)' +
-    '\\' +
-    options.closing_character, 'g'
-  )
-}
-
-export const treeWalker = (obj, typing: boolean = true, aliased = {}) => {
+export const walkTokens = (obj, typing: boolean = true, aliased = {}) => {
   let type = {}
 
   if (obj.value) {
     const _path = obj.path.join('.')
 
     // Resolve aliased properties
-    const refRegex = createReferenceRegex({})
     const keyRegex = /{(.*)}/g
-    const testOriginal = obj.original.value.match(refRegex)
+    const testOriginal = obj.original.value.match(referencesRegex)
     if (testOriginal?.[0] && testOriginal[0] === obj.original.value) {
       obj.value = (obj.original.value as string).replace(keyRegex, (_, tokenPath) => {
         aliased[_path] = resolveVariableFromPath(tokenPath)
@@ -45,7 +34,7 @@ export const treeWalker = (obj, typing: boolean = true, aliased = {}) => {
   } else {
     for (const k in obj) {
       if (obj[k] && typeof obj[k] === 'object') {
-        type[k] = treeWalker(obj[k], typing, aliased).type
+        type[k] = walkTokens(obj[k], typing, aliased).type
       }
     }
   }

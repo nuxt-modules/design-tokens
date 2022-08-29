@@ -7,7 +7,7 @@ import { useRuntimeConfig, useStorage } from '#imports'
 export default defineEventHandler(async () => {
   const runtimeConfig = useRuntimeConfig()
 
-  const { tokensDir } = runtimeConfig?.designTokens
+  const { tokensDir } = runtimeConfig?.style
 
   const storage = useStorage()
 

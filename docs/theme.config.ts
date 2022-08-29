@@ -1,6 +1,6 @@
 export default {
-  title: 'Nuxt Design Tokens',
-  description: 'Fully-typed design tokens integration for making and maintaining a design system.',
+  title: '@nuxtjs/style',
+  description: 'Vue-native zero-runtime CSS-in-JS solution.',
   url: 'https://design-tokens.nuxtjs.org',
   socials: {
     twitter: '@yaeeelglx',
@@ -16,7 +16,7 @@ export default {
   },
   cover: {
     src: '/cover.jpg',
-    alt: 'Nuxt Design Tokens'
+    alt: '@nuxtjs/style'
   },
   footer: {
     credits: {

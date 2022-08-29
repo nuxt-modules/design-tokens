@@ -3,11 +3,11 @@ import { existsSync } from 'fs'
 import { requireModule } from '@nuxt/kit'
 import { resolve } from 'pathe'
 import { defu } from 'defu'
-import { MODULE_DEFAULTS, NuxtLayer } from './utils'
-import type { NuxtDesignTokens } from './index'
+import { MODULE_DEFAULTS, NuxtLayer } from '../utils'
+import type { NuxtStyleTheme } from '../index'
 
 export const resolveConfig = (layer: NuxtLayer, key: string, configFile = `${key}.config`) => {
-  const value = layer.config?.designTokens?.[key] || MODULE_DEFAULTS[key]
+  const value = layer.config?.style?.[key] || MODULE_DEFAULTS[key]
   let config = {}
 
   let filePath: string
@@ -35,12 +35,12 @@ export const resolveConfig = (layer: NuxtLayer, key: string, configFile = `${key
  */
 export const resolveConfigTokens = (layers: NuxtLayer[]) => {
   const tokensFilePaths: string[] = []
-  let tokens = {} as NuxtDesignTokens
+  let tokens = {} as NuxtStyleTheme
 
   const splitLayer = (layer: NuxtLayer) => {
     // Deeply merge tokens
     // In opposition to defaults, here arrays should also be merged.
-    if (layer.config?.designTokens?.tokens || MODULE_DEFAULTS.tokens) {
+    if (layer.config?.style?.tokens || MODULE_DEFAULTS.tokens) {
       const { config: layerTokens, filePath: _layerTokensFilePath } = resolveConfig(layer, 'tokens', 'tokens.config')
 
       if (_layerTokensFilePath) { tokensFilePaths.push(_layerTokensFilePath) }

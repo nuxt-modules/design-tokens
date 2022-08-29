@@ -4,7 +4,8 @@ import * as p from 'paneer'
 import * as r from 'recast'
 import toAST from 'to-ast'
 // @ts-ignore
-import type { DesignTokens } from '../../../../index'
+import type { NuxtDesignTokens } from '#design-tokens/types'
+// @ts-ignore
 import { useStorage } from '#imports'
 
 export default defineEventHandler(async () => {
@@ -14,7 +15,7 @@ export default defineEventHandler(async () => {
 
   const config = await storage.getItem('cache:design-tokens:config')
 
-  const tokensToExpression = (_tokens: DesignTokens) => {
+  const tokensToExpression = (_tokens: NuxtDesignTokens) => {
     const root = r.types.builders.objectExpression([])
 
     // Resolve the target on which resolved keys should be pushed
@@ -38,7 +39,7 @@ export default defineEventHandler(async () => {
       return r.types.builders.identifier(key)
     }
 
-    const walkTokens = (tokens: DesignTokens, context = undefined) => {
+    const walkTokens = (tokens: NuxtDesignTokens, context = undefined) => {
       const target = resolveTarget(context)
 
       // Walk through tokens definition
@@ -79,17 +80,7 @@ export default defineEventHandler(async () => {
 
         let newContext
 
-        if (value.composed) {
-          // compose() handling
-          delete value.composed
-          newContext = r.types.builders.objectProperty(
-            resolveKey(key),
-            r.types.builders.callExpression(
-              r.types.builders.identifier('compose'),
-              [r.types.builders.objectExpression([])]
-            )
-          )
-        } else if (value.palette) {
+        if (value.palette) {
           // palette() handling
           delete value.palette
           newContext = r.types.builders.objectProperty(

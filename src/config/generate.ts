@@ -3,9 +3,9 @@ import { rm, writeFile } from 'fs/promises'
 import type { Core as Instance } from 'browser-style-dictionary/types/browser'
 import StyleDictionary from 'browser-style-dictionary/browser.js'
 import { Dictionary } from 'browser-style-dictionary/types/Dictionary'
-import { tsTypesDeclaration, tsFull, jsFull, treeWalker } from './formats'
-import { createTokensDir } from './config'
-import type { NuxtDesignTokens } from './index'
+import { tsTypesDeclaration, tsFull, jsFull, walkTokens } from '../formats'
+import type { NuxtStyleTheme } from '../index'
+import { createTokensDir } from './load'
 
 export const stubTokens = async (buildPath: string, force = false) => {
   const files = {
@@ -27,7 +27,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
   }
 }
 
-export const getStyleDictionaryInstance = async (tokens: NuxtDesignTokens, buildPath: string) => {
+export const getStyleDictionaryInstance = async (tokens: NuxtStyleTheme, buildPath: string) => {
   let styleDictionary: Instance = StyleDictionary
 
   styleDictionary.fileHeader = {}
@@ -50,7 +50,7 @@ export const getStyleDictionaryInstance = async (tokens: NuxtDesignTokens, build
       const selector = options.selector ? options.selector : ':root'
       const { outputReferences } = options
       const { formattedVariables } = StyleDictionary.formatHelpers
-      const { aliased } = treeWalker(dictionary.tokens, false)
+      const { aliased } = walkTokens(dictionary.tokens, false)
       dictionary.allTokens = dictionary.allTokens.filter(token => !aliased[token.path.join('.')])
       return `${selector} {\n` + formattedVariables({ format: 'css', dictionary, outputReferences }) + '\n}\n'
     }
@@ -181,9 +181,9 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
 )
 
 export const generateTokens = async (
-  tokens: NuxtDesignTokens,
+  tokens: NuxtStyleTheme,
   buildPath: string,
-  silent = false
+  silent = true
 ) => {
   // Check for tokens directory existence; it might get cleaned-up from `.nuxt`
   if (!existsSync(buildPath)) { await createTokensDir(buildPath) }
