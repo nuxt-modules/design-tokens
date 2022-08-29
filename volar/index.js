@@ -31,70 +31,68 @@ const plugin = _ => ({
       }
 
       // Add TemplateTags typings to autocomplete root in `css()`
-      const templateTags = {}
-      walkElementNodes(
-        sfc.templateAst,
-        ({ tag }) => {
-          templateTags[tag] = true
-        }
-      )
-
-      embeddedFile.codeGen.addText(`type ComponentTemplateTags__VLS = {\n${Object.entries(templateTags).map(
-          ([tag]) => {
-            return `  /**
-   * The \`<${tag}>\` tag from the Vue template.
-   */
-  ${tag}: true,\n`
+      if (sfc.template && sfc.template.content) {
+        const templateTags = {}
+        walkElementNodes(
+          sfc.templateAst,
+          ({ tag }) => {
+            templateTags[tag] = true
           }
-        ).join('')}
-}\n`)
-
-      // $variantProps()
-      embeddedFile.codeGen.addText('\ndeclare const $variantsProps: (key: keyof ComponentTemplateTags__VLS) => {}\n')
-
-      const templateDtMatches = sfc.template.content.match(dtRegex)
-      if (templateDtMatches) {
-        sfc.template.content.replace(
-          dtRegex,
-          (match, dtKey, index) => addDt(match, dtKey, index, sfc.template.tag)
         )
+        embeddedFile.codeGen.addText(`type ComponentTemplateTags__VLS = {\n${Object.entries(templateTags).map(([tag]) => `  /**\n  * The \`<${tag}>\` tag from the Vue template.\n  */\n  ${tag}: true,\n`).join('')}}\n`)
+
+        // $variantProps()
+        embeddedFile.codeGen.addText('\ndeclare const $variantsProps: (key: keyof ComponentTemplateTags__VLS) => {}\n')
+
+        const templateDtMatches = sfc.template.content.match(dtRegex)
+        if (templateDtMatches) {
+          sfc.template.content.replace(
+            dtRegex,
+            (match, dtKey, index) => addDt(match, dtKey, index, sfc.template.tag)
+          )
+        }
+      } else {
+        embeddedFile.codeGen.addText('type ComponentTemplateTags__VLS = {}')
       }
 
       // Grab `css()` function and type it.
       for (let i = 0; i < sfc.styles.length; i++) {
         const style = sfc.styles[i]
-        const cssMatches = style.content.match(/css\(([\s\S]*)\)/)
-        const dtMatches = style.content.match(dtRegex)
 
-        if (cssMatches) {
-          embeddedFile.codeGen.addText('declare const css: (declaration: import(\'@nuxtjs/design-tokens\').CSS<ComponentTemplateTags__VLS, import(\'@nuxtjs/design-tokens\').NuxtStyleTheme>) => any')
+        if (style?.content) {
+          const cssMatches = style.content.match(/css\(([\s\S]*)\)/)
+          const dtMatches = style.content.match(dtRegex)
 
-          embeddedFile.codeGen.addText('\nconst __VLS_css = ')
-          embeddedFile.codeGen.addCode2(
-            cssMatches[0],
-            cssMatches.index,
-            {
-              vueTag: 'style',
-              vueTagIndex: i,
-              capabilities: {
-                basic: true,
-                references: true,
-                definitions: true,
-                diagnostic: true,
-                rename: true,
-                completion: true,
-                semanticTokens: true
+          if (cssMatches) {
+            embeddedFile.codeGen.addText('declare const css: (declaration: import(\'@nuxtjs/design-tokens\').CSS<ComponentTemplateTags__VLS, import(\'@nuxtjs/design-tokens\').NuxtStyleTheme>) => any')
+
+            embeddedFile.codeGen.addText('\nconst __VLS_css = ')
+            embeddedFile.codeGen.addCode2(
+              cssMatches[0],
+              cssMatches.index,
+              {
+                vueTag: 'style',
+                vueTagIndex: i,
+                capabilities: {
+                  basic: true,
+                  references: true,
+                  definitions: true,
+                  diagnostic: true,
+                  rename: true,
+                  completion: true,
+                  semanticTokens: true
+                }
               }
-            }
-          )
-          embeddedFile.codeGen.addText('\n')
-        }
+            )
+            embeddedFile.codeGen.addText('\n')
+          }
 
-        if (dtMatches) {
-          style.content.replace(
-            dtRegex,
-            (match, dtKey, index) => addDt(match, dtKey, index, style.tag, i)
-          )
+          if (dtMatches) {
+            style.content.replace(
+              dtRegex,
+              (match, dtKey, index) => addDt(match, dtKey, index, style.tag, i)
+            )
+          }
         }
       }
     }
