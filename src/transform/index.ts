@@ -181,7 +181,6 @@ function transformVueSFC (code: string, id: string) {
   if (id.endsWith('.vue') && !id.includes('?')) {
     const styleTagRe = /<style\b(.*?)\blang=['"][tj]sx?['"](.*?)>/
     if (code.match(styleTagRe)) {
-      console.log(code.replace(styleTagRe, '<style$1lang="postcss"$2>'))
       return code.replace(styleTagRe, '<style$1lang="postcss"$2>')
     }
   }
