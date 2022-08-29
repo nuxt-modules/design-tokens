@@ -152,7 +152,20 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     // Register `$dt()` transform plugin
-    registerTransformPlugin(nuxt, { tokensDir, tokensFilePaths: tokensFilePaths.map(path => resolveModule(path)), hasTailwind })
+    nuxt.hook(
+      'components:extend',
+      (components) => {
+        registerTransformPlugin(
+          nuxt,
+          {
+            components: components.map(({ global, kebabName, pascalName, filePath }: any) => ({ global, kebabName, pascalName, filePath })),
+            tokensDir,
+            tokensFilePaths: tokensFilePaths.map(path => resolveModule(path)),
+            hasTailwind
+          }
+        )
+      }
+    )
 
     // Inject typings
     nuxt.hook('prepare:types', (opts) => {

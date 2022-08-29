@@ -55,7 +55,7 @@
     "postcss-nested": "^5.0.6",
     "to-ast": "^1.0.0",
     "unplugin-ast": "^0.5.5",
-    "untyped": "^0.4.5"
+    "untyped": "^0.4.7"
   },
   "devDependencies": {
     "@nuxt-themes/docus": "npm:@nuxt-themes/docus-edge@latest",
@@ -64,10 +64,10 @@
     "@nuxt/test-utils": "npm:@nuxt/test-utils-edge@latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@nuxtjs/tailwindcss": "^5.3.2",
-    "@volar/vue-language-core": "^0.40.1",
+    "@volar/vue-language-core": "^0.40.4",
     "browser-style-dictionary": "^3.1.1-browser.1",
     "c8": "^7.12.0",
-    "eslint": "^8.22.0",
+    "eslint": "^8.23.0",
     "globby": "^13.1.2",
     "husky": "^8.0.1",
     "jiti": "^1.14.0",

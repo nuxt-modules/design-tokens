@@ -12,12 +12,14 @@ export interface VueQuery {
   vue?: boolean
   src?: boolean
   global?: boolean
-  type?: 'script' | 'template' | 'style' | 'custom' | 'i18n'
+  type?: 'script' | 'template' | 'style' | 'custom'
   blockType?: string
   index?: number
   locale?: string
   lang?: string
   raw?: boolean
+  scoped?: string
+  transformed?: boolean
   issuerPath?: string
 }
 
@@ -25,10 +27,8 @@ export function parseVueRequest (id: string) {
   const [filename, rawQuery] = id.split('?', 2)
   const params = new URLSearchParams(rawQuery)
   const ret = {} as VueQuery
-  const langPart = Object.keys(Object.fromEntries(params)).find(key =>
-    /lang\./i.test(key)
-  )
-  ret.vue = params.has('vue')
+  const langPart = Object.keys(Object.fromEntries(params)).find(key => /lang\./i.test(key))
+  ret.vue = params.has('vue') || id.endsWith('.vue')
   ret.global = params.has('global')
   ret.src = params.has('src')
   ret.raw = params.has('raw')
@@ -41,8 +41,11 @@ export function parseVueRequest (id: string) {
   if (params.has('index')) {
     ret.index = Number(params.get('index'))
   }
-  if (params.has('locale')) {
-    ret.locale = params.get('locale') as VueQuery['locale']
+  if (params.has('data-v-transformed')) {
+    ret.transformed = Boolean(params.get('data-v-transformed'))
+  }
+  if (params.has('scoped')) {
+    ret.scoped = String(params.get('scoped'))
   }
   if (langPart) {
     const [, lang] = langPart.split('.')
@@ -53,7 +56,9 @@ export function parseVueRequest (id: string) {
   if (params.has('issuerPath')) {
     ret.issuerPath = params.get('issuerPath') as VueQuery['issuerPath']
   }
+  // console.log({ filename, rawQuery, params, ret })
   return {
+    id,
     filename,
     query: ret
   }

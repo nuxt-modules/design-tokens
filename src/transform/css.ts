@@ -6,8 +6,7 @@ import { $tokens } from '../index'
 
 const cssContentRegex = /css\(({.*?\})\)/mgs
 
-export const resolveStyleTs = (code: string) => {
-  const variantsProps = {}
+export const resolveStyleTs = (code: string = '', variantsProps = {}) => {
   const resolveVariantProps = (property: string, value: any) => {
     variantsProps[property] = Object.entries(value).reduce(
       (acc, [key, _]) => {
@@ -24,10 +23,11 @@ export const resolveStyleTs = (code: string) => {
 
   code = code.replace(
     cssContentRegex,
-    (...code) => {
-      const declaration = json5.parse(code[1])
+    (...cssFunctionMatch) => {
+      // Parse css({}) content
+      const declaration = json5.parse(cssFunctionMatch[1])
 
-      const css = stringify(
+      const style = stringify(
         declaration,
         (property, value) => {
           // Match reserved directives (@screen, @dark, @light)
@@ -89,9 +89,9 @@ export const resolveStyleTs = (code: string) => {
         }
       )
 
-      return css
+      return style
     }
   )
 
-  return { variantsProps, code }
+  return code
 }

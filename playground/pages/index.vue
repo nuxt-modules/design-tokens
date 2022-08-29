@@ -10,6 +10,7 @@
 
     <section>
       <Block primary />
+      <Block black />
       <Block lila />
       <Block lavender />
       <Block velvet />
@@ -26,9 +27,9 @@
   </div>
 </template>
 
-<style>
+<style lang="postcss">
 html {
-  font-family: Inter, sans-serif;
+  font-family: $dt('fonts.primary');
 }
 </style>
 
@@ -40,7 +41,7 @@ html {
   align-items: center;
   flex-direction: column;
   overflow-y: auto;
-  background-color: $dt('colors.primary.100');
+  background-color: $dt('colors.primary.500');
   color: white;
 
   @dark {
@@ -58,7 +59,7 @@ html {
     position: sticky;
     top: 0;
     width: 100%;
-    background-color: $dt('colors.black');
+    background-color: $dt('colors.primary.500');
     z-index: 50;
 
     span {
@@ -79,7 +80,7 @@ html {
   }
 
   footer {
-    background-color: $dt('colors.black');
+    background-color: $dt('colors.grape');
     display: flex;
     align-items: center;
     justify-content: space-between;

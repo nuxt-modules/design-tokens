@@ -1,6 +1,11 @@
 import { defineTokens, palette } from '../../src'
 
 export default defineTokens({
+  fonts: {
+    primary: {
+      value: 'Inter, sans-serif'
+    }
+  },
   colors: {
     primary: palette('rgb(49, 52, 66)'),
     black: {

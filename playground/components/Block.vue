@@ -6,9 +6,11 @@ defineProps({
 
 <template>
   <button :class="{ ...$props }">
-    <p v-for="[key, value] in Object.entries($props)" :key="key">
-      {{ value ? key : '' }}
-    </p>
+    <template v-for="[key, value] in Object.entries($props)">
+      <p v-if="value" :key="key">
+        {{ value ? key : '' }}
+      </p>
+    </template>
   </button>
 </template>
 
@@ -21,18 +23,18 @@ css({
     borderRadius: '16px',
     width: '320px',
     height: '320px',
-    border: '4px solid {colors.black}',
+    border: '16px solid red',
     position: 'relative',
     '&:hover': {
-      border: '4px solid {colors.velvet}'
+      border: '8px solid blue',
     },
     '& > p': {
-      fontSize: '32px',
-      textDecoration: 'underline'
+      fontSize: '16px',
+      textDecoration: 'underline',
     },
     variants: {
       primary: {
-        backgroundColor: '{colors.primary.900}',
+        backgroundColor: '{colors.primary.600}',
       },
       black: {
         backgroundColor: '{colors.black}',
