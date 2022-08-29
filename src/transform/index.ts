@@ -1,9 +1,8 @@
 import fs from 'fs'
 import { createUnplugin } from 'unplugin'
 import { Nuxt } from '@nuxt/schema'
-import { compileStyle, parse } from '@vue/compiler-sfc'
+import { parse } from '@vue/compiler-sfc'
 import MagicString from 'magic-string'
-import { ViteDevServer } from 'vite'
 import { parseVueRequest } from '../utils/vue'
 import { resolveDt, resolveVariantProps, resolverRegexes, resolveStyle } from './resolvers'
 import { resolveStyleTs } from './css'
@@ -54,19 +53,13 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
 
         const { descriptor } = parse(file, { filename })
 
-        const styleTagContent = descriptor.styles.find(
-          ({ lang, scoped }) => {
-            return lang === 'ts' && !!query.scoped === scoped
-          }
-        )
-
-        if (!styleTagContent) { return }
-
-        let source = styleTagContent?.content || ''
+        const style = descriptor.styles[query.index!]
+        let source = style.content || ''
         source = resolveStyleTs(source)
         source = resolveStyle(source)
-
-        return source
+        if (style.content !== source) {
+          return source
+        }
       }
     },
 
@@ -85,6 +78,9 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
     },
 
     transform (code, id) {
+      const transformed = transformVueSFC(code, id)
+      if (transformed != null) { return transformed }
+
       const { filename, query } = parseVueRequest(id)
 
       // Create sourceMap compatible string
@@ -145,6 +141,16 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
       }
 
       return result()
+    },
+
+    vite: {
+      handleHotUpdate (ctx) {
+        const defaultRead = ctx.read
+        ctx.read = async function () {
+          const code = await defaultRead()
+          return transformVueSFC(code, ctx.file) || code
+        }
+      }
     }
   }
 }
@@ -169,4 +175,13 @@ export const registerTransformPlugin = (nuxt: Nuxt, options: any) => {
       unpluginNuxtStyle.vite(options)
     )
   })
+}
+
+function transformVueSFC (code: string, id: string) {
+  if (id.endsWith('.vue') && !id.includes('?')) {
+    const styleTagRe = /<style\b(.*?)\blang=['"][tj]sx?['"](.*?)>/
+    if (code.match(styleTagRe)) {
+      return code.replace(styleTagRe, '<style$1lang="postcss"$2>')
+    }
+  }
 }
