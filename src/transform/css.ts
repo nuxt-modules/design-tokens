@@ -1,4 +1,5 @@
-import { parse } from 'json5'
+// eslint-disable-next-line import/default
+import json5 from 'json5'
 import { stringify } from '@stitches/stringify'
 import { referencesRegex } from '../formats/references'
 import { $tokens } from '../index'
@@ -24,7 +25,7 @@ export const resolveStyleTs = (code: string = '', variantsProps = {}) => {
     cssContentRegex,
     (...cssFunctionMatch) => {
       // Parse css({}) content
-      const declaration = parse(cssFunctionMatch[1])
+      const declaration = json5.parse(cssFunctionMatch[1])
 
       const style = stringify(
         declaration,
