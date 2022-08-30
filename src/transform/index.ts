@@ -54,13 +54,13 @@ export const unpluginNuxtStyle = createUnplugin<any>(({ components }: { componen
         const { descriptor } = parse(file, { filename })
 
         const style = descriptor.styles[query.index!]
-        let source = style.content || ''
+
+        let source = style?.content || ''
+
         source = resolveStyleTs(source)
         source = resolveStyle(source)
 
-        if (style.content !== source) {
-          return source
-        }
+        if (style?.content !== source) { return source }
       }
     },
 
