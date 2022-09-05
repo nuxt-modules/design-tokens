@@ -41,9 +41,9 @@ export const tsTypesDeclaration = ({ tokens }: Dictionary) => {
 export const tsFull = ({ tokens }: Dictionary) => {
   const { type, aliased } = walkTokens(tokens, false)
 
-  let result = 'import type { NuxtThemeTokens,   NuxtThemeTokensPaths, TokenHelperOptions } from \'./types.d\'\n\n'
+  let result = 'import type { NuxtThemeTokens,   NuxtThemeTokensPaths, TokenHelperOptions } from \'./types\'\n\n'
 
-  result = result + 'export * from \'./types.d\'\n\n'
+  result = result + 'export * from \'./types\'\n\n'
 
   result = result + `${getFunction}\n\n`
 

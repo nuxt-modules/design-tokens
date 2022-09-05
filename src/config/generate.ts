@@ -15,7 +15,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
     'tokens.json': () => '{}',
     'index.js': jsFull,
     'index.ts': tsFull,
-    'types.d.ts': tsTypesDeclaration
+    'types.ts': tsTypesDeclaration
   }
 
   for (const [file, stubbingFunction] of Object.entries(files)) {
@@ -104,7 +104,7 @@ export const getStyleDictionaryInstance = async (tokens: NuxtStyleTheme, buildPa
             format: 'typescript/full'
           },
           {
-            destination: 'types.d.ts',
+            destination: 'types.ts',
             format: 'typescript/types-declaration'
           }
         ]
@@ -146,8 +146,8 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
     try {
       // Weird trick to disable nasty logging
       if (silent) {
-      // @ts-ignore
-      // eslint-disable-next-line no-console
+        // @ts-ignore
+        // eslint-disable-next-line no-console
         console._log = console.log
         // eslint-disable-next-line no-console
         console.log = () => {}
@@ -170,8 +170,8 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
 
       // Weird trick to disable nasty logging
       if (silent) {
-      // @ts-ignore
-      // eslint-disable-next-line no-console
+        // @ts-ignore
+        // eslint-disable-next-line no-console
         console.log = console._log
       }
     } catch (e) {
