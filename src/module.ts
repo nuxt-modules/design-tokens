@@ -134,7 +134,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.alias = nuxt.options.alias || {}
     nuxt.options.alias['#design-tokens'] = resolveTokensDir('index')
     nuxt.options.alias['#design-tokens/style'] = resolveTokensDir('tokens.css')
-    nuxt.options.alias['#design-tokens/types'] = resolveTokensDir('types.d')
+    nuxt.options.alias['#design-tokens/types'] = resolveTokensDir('types')
 
     // Inject CSS
     // nuxt.options.css = nuxt.options.css || []
@@ -169,7 +169,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Inject typings
     nuxt.hook('prepare:types', (opts) => {
-      opts.references.push({ path: resolveTokensDir('types.d.ts') })
+      opts.references.push({ path: resolveTokensDir('types.ts') })
     })
 
     // Initial build

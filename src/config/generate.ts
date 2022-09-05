@@ -3,7 +3,7 @@ import { rm, writeFile } from 'fs/promises'
 import type { Core as Instance } from 'browser-style-dictionary/types/browser'
 import StyleDictionary from 'browser-style-dictionary/browser.js'
 import { Dictionary } from 'browser-style-dictionary/types/Dictionary'
-import { tsTypesDeclaration, tsFull, jsFull, walkTokens } from '../formats'
+import { tsTypesExports, tsFull, jsFull, walkTokens } from '../formats'
 import type { NuxtStyleTheme } from '../index'
 import { createTokensDir } from './load'
 
@@ -15,7 +15,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
     'tokens.json': () => '{}',
     'index.js': jsFull,
     'index.ts': tsFull,
-    'types.d.ts': tsTypesDeclaration
+    'types.ts': tsTypesExports
   }
 
   for (const [file, stubbingFunction] of Object.entries(files)) {
@@ -40,7 +40,7 @@ export const getStyleDictionaryInstance = async (tokens: NuxtStyleTheme, buildPa
   styleDictionary.registerFormat({
     name: 'typescript/types-declaration',
     formatter ({ dictionary }) {
-      return tsTypesDeclaration(dictionary)
+      return tsTypesExports(dictionary)
     }
   })
 
@@ -104,7 +104,7 @@ export const getStyleDictionaryInstance = async (tokens: NuxtStyleTheme, buildPa
             format: 'typescript/full'
           },
           {
-            destination: 'types.d.ts',
+            destination: 'types.ts',
             format: 'typescript/types-declaration'
           }
         ]
@@ -146,8 +146,8 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
     try {
       // Weird trick to disable nasty logging
       if (silent) {
-      // @ts-ignore
-      // eslint-disable-next-line no-console
+        // @ts-ignore
+        // eslint-disable-next-line no-console
         console._log = console.log
         // eslint-disable-next-line no-console
         console.log = () => {}
@@ -170,8 +170,8 @@ const generateTokensOutputs = (styleDictionary: Instance, silent = true) => new 
 
       // Weird trick to disable nasty logging
       if (silent) {
-      // @ts-ignore
-      // eslint-disable-next-line no-console
+        // @ts-ignore
+        // eslint-disable-next-line no-console
         console.log = console._log
       }
     } catch (e) {
