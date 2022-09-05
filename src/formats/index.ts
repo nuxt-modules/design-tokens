@@ -10,7 +10,7 @@ export { walkTokens }
  * Formats
  */
 
-export const tsTypesDeclaration = ({ tokens }: Dictionary) => {
+export const tsTypesExports = ({ tokens }: Dictionary) => {
   const { type } = walkTokens(tokens)
 
   let result = 'import type { Ref } from \'vue\'\n\n'

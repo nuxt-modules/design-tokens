@@ -3,7 +3,7 @@ import { rm, writeFile } from 'fs/promises'
 import type { Core as Instance } from 'browser-style-dictionary/types/browser'
 import StyleDictionary from 'browser-style-dictionary/browser.js'
 import { Dictionary } from 'browser-style-dictionary/types/Dictionary'
-import { tsTypesDeclaration, tsFull, jsFull, walkTokens } from '../formats'
+import { tsTypesExports, tsFull, jsFull, walkTokens } from '../formats'
 import type { NuxtStyleTheme } from '../index'
 import { createTokensDir } from './load'
 
@@ -15,7 +15,7 @@ export const stubTokens = async (buildPath: string, force = false) => {
     'tokens.json': () => '{}',
     'index.js': jsFull,
     'index.ts': tsFull,
-    'types.ts': tsTypesDeclaration
+    'types.ts': tsTypesExports
   }
 
   for (const [file, stubbingFunction] of Object.entries(files)) {
@@ -40,7 +40,7 @@ export const getStyleDictionaryInstance = async (tokens: NuxtStyleTheme, buildPa
   styleDictionary.registerFormat({
     name: 'typescript/types-declaration',
     formatter ({ dictionary }) {
-      return tsTypesDeclaration(dictionary)
+      return tsTypesExports(dictionary)
     }
   })
 
