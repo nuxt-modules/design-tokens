@@ -33,7 +33,7 @@
     "build:dev": "nuxi build playground",
     "generate:dev": "nuxi generate playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxi prepare playground && nuxt-module-build --stub",
+    "dev:prepare": "nuxi prepare playground && nuxt-module-build --stub && nuxt-module-build prepare",
     "dev:docs": "nuxi dev docs",
     "build:docs": "nuxi generate docs",
     "lint": "eslint --ext .js,.ts,.vue .",
