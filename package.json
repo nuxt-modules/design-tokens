@@ -76,7 +76,7 @@
     "lint-staged": "^13.0.3",
     "lodash": "^4.17.21",
     "nuxt": "npm:nuxt3@latest",
-    "pathe": "^0.3.5",
+    "pathe": "^1.1.2",
     "vitest": "^0.22.1"
   }
 }
