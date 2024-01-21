@@ -57,7 +57,7 @@
     "postcss-nested": "^5.0.6",
     "to-ast": "^1.0.0",
     "unplugin-ast": "^0.5.5",
-    "untyped": "^0.4.7"
+    "untyped": "^1.4.2"
   },
   "devDependencies": {
     "@nuxt-themes/docus": "npm:@nuxt-themes/docus-edge@latest",
