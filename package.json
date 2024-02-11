@@ -65,7 +65,7 @@
     "@nuxt/schema": "^3.0.0-rc.8",
     "@nuxt/test-utils": "npm:@nuxt/test-utils-edge@latest",
     "@nuxtjs/eslint-config-typescript": "latest",
-    "@nuxtjs/tailwindcss": "^5.3.2",
+    "@nuxtjs/tailwindcss": "^6.11.4",
     "@volar/vue-language-core": "^0.40.4",
     "browser-style-dictionary": "^3.1.1-browser.1",
     "c8": "^7.12.0",
