@@ -52,7 +52,7 @@
     "csstype": "^3.1.0",
     "json5": "^2.2.1",
     "paneer": "^0.0.1",
-    "postcss-custom-properties": "^12.1.8",
+    "postcss-custom-properties": "^13.3.6",
     "postcss-easing-gradients": "^3.0.1",
     "postcss-nested": "^5.0.6",
     "to-ast": "^1.0.0",
